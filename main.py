@@ -8,6 +8,7 @@ from nltk.tokenize import word_tokenize
 from pathlib import Path
 from random import sample, seed, shuffle
 from scipy.stats import entropy
+from simulated_api import SimulatedAPI
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.feature_extraction.text import TfidfVectorizer
 from text_dataset_labeling_assistant import TextDatasetLabelingAssistant
@@ -285,7 +286,7 @@ def test(classifier, vectorizer, X, y, test_data, test_labels):
 
 def test_active_learning(data, labels, data_lengths, assist, vectorizer,
                          classifier, test_data, test_labels, batch_size=10,
-                         budgets=None):
+                         budgets=None, random_state=10):
     accuracy = {}
     times = {}
     positive_ratio = {}
@@ -294,6 +295,8 @@ def test_active_learning(data, labels, data_lengths, assist, vectorizer,
         budgets = [len(data)]
 
     for budget in budgets:
+        seed(random_state)
+
         accuracy[budget] = {}
         times[budget] = {}
         positive_ratio[budget] = {}
@@ -328,13 +331,16 @@ def test_active_learning(data, labels, data_lengths, assist, vectorizer,
 
 def test_hybrid_labeling(data, keywords, labels, data_lengths, assist,
                          vectorizer, classifier, test_data, test_labels,
-                         batch_size=10, alpha="auto", budgets=None):
+                         batch_size=10, alpha="auto", budgets=None,
+                         random_state=10):
     accuracy = {}
     times = {}
     positive_ratio = {}
 
     if budgets is None or len(budgets) == 0:
         budgets = [len(data)]
+
+    seed(random_state)
 
     Xi, yi, Xq, yq = assist.query_with_keywords(data, keywords,
                                                 budgets[len(budgets) - 1], 300,
@@ -377,7 +383,7 @@ def test_hybrid_labeling(data, keywords, labels, data_lengths, assist,
 
 def test_keyword_labeling(data, keywords, labels, data_lengths, assist,
                           vectorizer, classifier, test_data, test_labels,
-                          alpha="auto"):
+                          mode="50_50", random_state=10):
     budget = len(data)
     accuracy = {}
     times = {}
@@ -387,11 +393,19 @@ def test_keyword_labeling(data, keywords, labels, data_lengths, assist,
     positive_ratio[budget] = {}
 
     for data_length in data_lengths:
-        assist.set_alpha(alpha)
+        seed(random_state)
 
         start = time()
-        X, y = assist.label_with_selected_keywords(data, keywords, data_length,
-                                                   labels=labels)
+
+        if mode == "50_50":
+            X, y = assist.label_with_50_50(keywords, data_length)
+        elif mode == "top_k":
+            X, y = assist.label_with_top_k(keywords, data_length)
+        elif mode == "top_k_prop":
+            X, y = assist.label_with_top_k_prop(keywords, data_length)
+
+        assist.reset_test_api()
+
         elapsed = round(time() - start)
         rs = test(classifier, vectorizer, X, y, test_data, test_labels)
         accuracy[budget][data_length] = "%0.2f" % rs["accuracy"]
@@ -402,10 +416,12 @@ def test_keyword_labeling(data, keywords, labels, data_lengths, assist,
 
 
 def test_random_labeling(data, labels, data_lengths, vectorizer, classifier,
-                         test_data, test_labels):
+                         test_data, test_labels, random_state=10):
     print("Random Labeling - Subreddit: " + subreddit)
 
     for data_length in data_lengths:
+        seed(random_state)
+
         start = time()
         indices = sample(range(len(data)), data_length)
         X = [data[index] for index in indices]
@@ -453,9 +469,10 @@ subreddit = "Suicide"
 positive = "Positive"
 negative = "Negative"
 max_df = 1.0
-assist = TextDatasetLabelingAssistant()
 data, labels, test_data, test_labels = load_data(subreddit, 1000, pos=positive,
                                                  neg=negative)
+api = SimulatedAPI(data, labels)
+assist = TextDatasetLabelingAssistant(api)
 vectorizer = TfidfVectorizer(max_features=1000, min_df=0.03,
                              ngram_range=(1, 3), stop_words="english")
 rf = RandomForestClassifier(n_estimators=2000, n_jobs=-1, random_state=10,
@@ -470,7 +487,7 @@ keywords = select_keywords([data[i] for i in range(len(data))
 
 print(keywords)
 test_keyword_labeling(data, keywords, labels, data_lengths, assist,
-                      vectorizer, rf, test_data, test_labels, alpha="auto")
+                      vectorizer, rf, test_data, test_labels, mode="50_50")
 # test_active_learning(data, labels, data_lengths, assist, vectorizer, rf,
 #                      test_data, test_labels, batch_size=250, budgets=budgets)
 # test_hybrid_labeling(data, keywords, labels, data_lengths, assist,
