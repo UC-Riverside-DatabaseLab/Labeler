@@ -1,0 +1,35 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Create Task Success
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Hi, {{ request.user }}!</h1>
+			<br>
+			<p>
+				You have successfully created new task!
+			</p>
+			<p>You can evaluate your task in the task evaluation list.</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<a href="{% url 'task:task_evaluation_list' %}">
+				<div class="btn btn-info btn-lg start_quiz">Task Evaluation List</div>
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

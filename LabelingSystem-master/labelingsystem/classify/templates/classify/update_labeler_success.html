@@ -1,0 +1,35 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Add or Remove Labeler
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Dear {{ request.user }}!</h1>
+			<br>
+			<p>
+				You have successfully updated the labelers list!
+			</p>
+			<p>You can now go back and check the task participation list...</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<a href="{% url 'task:task_participation_list' %}">
+				<div class="btn btn-info btn-lg start_quiz">Task Participation List</div>
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

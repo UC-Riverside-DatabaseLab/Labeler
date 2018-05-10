@@ -1,0 +1,225 @@
+{% extends "base_site.html" %}
+
+{% load static crispy_forms_tags %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; About
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+<style>
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.column {
+  float: left;
+  width: 25%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+@media (max-width: 300px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  padding: 0 16px;
+}
+
+.container::after, .row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title {
+  color: grey;
+}
+
+.button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #555;
+}
+</style>
+</head>
+<body>
+
+<h1>People</h1>
+<!--p>Resize the browser window to see the effect.</p-->
+
+<div class="row">
+  <div class="column">
+    <div class="card">
+      <img src="/media/sara44.jpg" alt="Sara" style="width:100%">
+      <div class="container">
+        <h2>Sara AlaeeJordehi</h2>
+        <p class="title">PhD Student</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>salae001@ucr.edu</p-->
+	<p><a href="mailto:salae001@ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <img src="/media/ryan.jpg" alt="Ryan" style="width:100%">
+      <div class="container">
+        <h2>Ryan Rivas</h2>
+        <p class="title">PhD Student</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p></p-->
+        <p><a href="mailto:rriva002@ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+
+  <!--div class="column"></div-->
+  <div class="column">
+    <div class="card">
+      <img src="/media/algan44.jpg" alt="Algan" style="width:100%">
+      <div class="container">
+        <h2> Algan Binggi Rustinyato</h2>
+        <p class="title">Intern</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>howardhuang@ucla.edu</p-->
+	<p><a href="mailto:howardhuang@ucla.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="row">
+ <div class="column">
+    <div class="card">
+      <img src="/media/vagelis444.jpg" alt="Vagelis" style="width:100%">
+      <div class="container">
+        <h2>Dr. Vagelis Hristidis</h2>
+        <p class="title">Supervisor</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>vagelis@cs.ucr.edu</p-->
+	<p><a href="mailto:vagelis@cs.ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+  <!--div class="column"></div-->
+ <div class="column">
+</div>
+  <div class="column">
+    <div class="card">
+      <img src="/media/sean44.jpg" alt="Sean" style="width:100%">
+      <div class="container"> 
+        <h2>Dr. Sean Young</h2>
+        <p class="title">Supervisor</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <p><a href="mailto:youngsean@ucla.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+
+  <div class="row">
+    <!--div class="col-md-4 col-md-offset-4"-->
+	<h1>About The Website</h1>
+	
+         <b>Social Post Analyzer</b> is a website developed by two students, Algan Binggi Rustinyato and Sara AlaeeJordehi, who worked as intern and PhD student, respectively, under supervision of Dr. Vagelis Hristidis at University of California Riverside and Dr. Sean Young at University of California Los Angeles.<br/> 
+</div>
+ <div class="row">
+	
+	The site was built to help with the collaborative labeling and its goal is to provide a platform for 
+	labelers from around the world to share the labeling tasks. The users of the site are assigned tasks with posts and labels. Each task has a description and labelers have to choose labels for different posts of different tasks. Their work will be evaluated by an algorithm. The overall score of all labelings for a single task based on the posts in that task will be reported in the site.<br/>
+	<!--p>
+	Need more information? <a href="mailto:ucipt.labeling@gmail.com"> Contact us </a>
+	</p-->
+      
+    </div>
+   
+
+
+	<div class="row">
+	   <h1>How to Use the Website</h1>
+	
+
+        	There are two roles assigned to people in this site : Admin and Labeler. Labelers choose labels for each post in the tasks assigned to them. Admins monitor the labelers' progress and observe the statistics.<br/>
+		<dl>
+			<dt>Admin's activities include : </dt>
+				
+				<li>Create and Edit Tasks</li>
+				<li>Create and Edit Quizzes for the Tasks</li>
+				<li>Add Labelers to the Tasks</li>
+				<li>Monitor the Labelers' Progress</li>
+			
+			<dt>Labeler's activities include : </dt>
+				<li>Taking Quiz</li>
+				<li>Labeling Posts</li>
+		</dl>
+        <!--p>
+        Need more information? <a href="mailto:ucipt.labeling@gmail.com"> Contact us </a>
+        </p-->
+
+    
+	</div>
+	<div class="row"><br/><br/> Need more information? <a href="mailto:ucipt.labeling@gmail.com"> Contact us </a></div>
+  </div>
+    
+
+  <div class="row">
+    <div class="col-md-12" style="text-align: center;">
+      <!--a href="{% url 'account:password_change' %}"-->
+        <!--div class="btn btn-info btn-sm">Change Password</div-->
+      <!--/a-->
+    </div>
+  </div>
+
+</div>
+<!--div class="row"> 
+    <div class="col-md-12" style="text-align: right;">
+
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucipt_logo.png' %}"></a>    
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucr_logo.png' %}"></a>
+   </div>
+</div-->
+
+</div>
+<div class="row"> 
+   <div class="col-md-12" style="text-align: right;">    
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucipt_logo.png' %}"></a> 
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucr_logo.png' %}"></a>
+   </div>
+</div>
+{% endblock content %}

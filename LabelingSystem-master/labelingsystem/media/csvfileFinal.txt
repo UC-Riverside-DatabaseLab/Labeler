@@ -1,0 +1,4 @@
+;sara.alaee@yahoo.com;dfsd@gmail.com;s.alaee@yahoo.com;sp78.salas@gmail.com;saras77.alaee@gmail.com
+sara.alaee@yahoo.com;0;-0.2857142857142857;-1.0;-0.3333333333333333;-0.3333333333333333;0;-0.3333333333333333
+dfsd@gmail.com;--;-0.3333333333333333;0.0;0;0.0;-1.0;0
+sp78.salas@gmail.com;--;--;-0.45454545454545453;

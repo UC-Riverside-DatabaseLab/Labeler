@@ -1,0 +1,84 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'quiz/css/take_quiz.css' %}">
+{% endblock extrastyle %}
+
+{% block extrascript %}
+<script type="text/javascript">
+	var num_posts = {{ post_list|length }};
+</script>
+<script type="text/javascript" src="{% static 'quiz/js/take_quiz.js' %}"></script>
+{% endblock extrascript %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div id="prolog">
+		<div class="row">
+			<div class="col-md-12">
+				<h1>Hi there, {{ request.user }}!</h1>
+				<p>
+					This is a quiz to make sure that you understand how to label. You will need to complete the quiz before doing the actual task.
+					Don't worry, you can take the quiz as many times as you want!
+				</p>
+				<p>-------------------------------------------------------</p>
+				<p>Title: {{ quiz.title }}</p>
+				<p>Passing Mark: {{ quiz.pass_mark }}</p>
+				<p>Description: {{ quiz.description }}</p>
+				<p>Number of Questions: {{ quiz.max_posts }}</p>
+				<br>
+				<br>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-md-12" style="text-align: center;">
+				<div class="btn btn-info btn-lg start_quiz">Start</div>
+			</div>
+		</div>
+	</div>
+
+	<form id="quiz_form" action="{% url 'response:create_quiz_response' quiz.pk %}" method="POST">
+		{% csrf_token %} 
+
+		{% for post in post_list %}
+		<div class="row" style="display: none;">
+			<div class="col-sm-12">
+				<div class="loader">
+					<div class="card">
+
+						<div class="post">
+							<h3>
+								<span id="post_{{ post.id }}"> {{ post }}</span>
+							</h3>
+						</div>
+						<ul>
+
+							{% for label in label_list %}
+							
+							<li class="btn btn-default">
+								<input id="{{ post.id }}_{{ label.id }}" type="radio" name="post_{{ post.id }}" value="{{ label.id }}">
+								<label for="{{ post.id }}_{{ label.id }}" class="element-animation">{{ label }}</label>
+								<div class="check"></div>
+							</li>
+							{% endfor %}
+							
+						</ul>
+						
+					</div>
+					
+				</div>
+				
+				<div class="text-muted">
+					<span class="label"></span>
+				</div>
+
+			</div>
+			<div align='center'>{{ forloop.counter }}/{{quiz.max_posts}}</div>
+		</div>
+		{% endfor %}
+	</form>
+</div>
+{% endblock content %}

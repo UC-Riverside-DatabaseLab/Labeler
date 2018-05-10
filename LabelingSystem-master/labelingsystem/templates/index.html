@@ -1,0 +1,79 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block content %}
+<meta http-equiv="refresh" content="0; url=http://dblab-rack30.cs.ucr.edu:8000/task/task_list" />
+<div class="container-fluid">
+	<div class="col-sm-12">
+		{% if not user.is_staff and not user.is_superuser %}
+		<!--div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Profile &nbsp <span class="glyphicon glyphicon-user"></span></h1>
+					<div class="cta-desc">
+						<p>View your profile and check your progress.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<a href="{% url 'account:account_detail' user.pk %}" class="btn btn-lg btn-block btn-default">View Profile</a>
+				</div>
+			</div>
+		</div-->
+
+		
+		<!--div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">My Tasks &nbsp <span class="glyphicon glyphicon-list-alt"></span></h1>
+					<div class="cta-desc">
+						<p>View the list of tasks given to you.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<a href="{% url 'task:task_list' %}" class="btn btn-lg btn-block btn-default">Get it done!</a>
+				</div>
+			</div>
+		</div-->
+		{% endif %}
+
+		{% if user.is_staff %}
+		<div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Admin Index &nbsp <span class="glyphicon glyphicon-cog"></span></h1>
+					<div class="cta-desc">
+						<p>Create and send new tasks. Evaluate existing task.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<a href="{% url 'admin_index' %}" class="btn btn-lg btn-block btn-default">Inspect</a>
+				</div>
+			</div>
+		</div>
+			
+		{% endif %}
+		{% if user.is_superuser %}
+                <div class="bs-calltoaction bs-calltoaction-info">
+                        <div class="row">
+                                <div class="col-md-9 cta-contents">
+                                        <h1 class="cta-title">Admin Index &nbsp <span class="glyphicon glyphicon-cog"></span></h1>
+                                        <div class="cta-desc">
+                                                <p>Create and send new tasks. Evaluate existing task.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 cta-button">
+                                        <a href="{% url 'super_admin_index' %}" class="btn btn-lg btn-block btn-default">Inspect</a>
+                                </div>
+                        </div>
+                </div>
+
+                {% endif %}
+
+	</div>
+</div>
+{% endblock content %}

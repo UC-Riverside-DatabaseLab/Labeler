@@ -1,0 +1,7 @@
+sara.alaee@yahoo.com;dfsd@gmail.com;s.alaee@yahoo.com;sp78.salas@gmail.com;saras77.alaee@gmail.com;sara.alaee@gmail.com;sa.alaee@gmail.com
+sara.alaee@yahoo.com;0;-0.2857142857142857;-1.0;-0.3333333333333333;-0.3333333333333333;-0.14285714285714285;-0.14285714285714285
+dfsd@gmail.com;--;0;-0.3333333333333333;-0.3333333333333333;0.0;0.1111111111111111;0.2727272727272727
+s.alaee@yahoo.com;--;--;0;0.0;-1.0;0.0;0.0
+sp78.salas@gmail.com;--;--;--;0;-0.45454545454545453;-0.09090909090909091;-0.3333333333333333
+saras77.alaee@gmail.com;--;--;--;--;0;-0.09090909090909091;0.0
+sara.alaee@gmail.com;--;--;--;--;--;0;0.5555555555555556

@@ -1,0 +1,34 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; Task Empty
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Sorry, {{ request.user }}!</h1>
+			<br>
+			<p>
+				You are not participating in any task!
+			</p>
+			<p>Please click the button below to return to the home page.</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<a href="{% url 'home' %}">
+				<div class="btn btn-info btn-lg start_quiz">Return</div>
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

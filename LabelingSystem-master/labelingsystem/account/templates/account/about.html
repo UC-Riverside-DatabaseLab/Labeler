@@ -1,0 +1,34 @@
+{% extends "base_site.html" %}
+
+{% load static crispy_forms_tags %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; This site has been developed to help with the collaborative labeling
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+  <div class="row">
+    <div class="col-md-4 col-md-offset-4">
+      <h1>Account Detail</h1>
+      <h3>email: {{ user.email }}</h3>
+      <h3>number of tasks: {{ task_list.count }}</h3>
+      <h3>number of responses: {{ post_response_list.count }}</h3>
+      <br>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12" style="text-align: center;">
+      <!--a href="{% url 'account:password_change' %}"-->
+        <!--div class="btn btn-info btn-sm">Change Password</div-->
+      <!--/a-->
+    </div>
+  </div>
+
+</div>
+{% endblock content %}
+~                        
