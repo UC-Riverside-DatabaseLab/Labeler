@@ -6,7 +6,7 @@ This repository contains source code for the [crowdtagger](http://dblab-rack30.c
 
 This project helps with the collaborative labeling and its goal is to provide a platform for labelers from around the world to share the labeling tasks. It can be deployed via different approaches with web server like Apache and database service like PostgreSQL.
 
-The goal of this project is for user to easily built and deploy his own collaborative labeling service as well as 
+The goal of this project is for user to easily built and deploy his own collaborative labeling service as well as maintain the site.
 
 ## Project Structure
 ```
@@ -44,7 +44,7 @@ The easiest way to run this project is to use docker as it has the binaries and 
 ## Running from github
 ### 💾 Installation and requirements on Ubuntu 16.04
 Crowdtagger requires Python 3.4+, Apache 2.2+, PostgreSQL or MySQL and OS-specific dependency tools.
-1. Clone this repository: `git clone git@github.com:nzhan005/crowdtagger.git`.
+1. Clone this repository: `git clone https://github.com/UC-Riverside-DatabaseLab/Labeler.git`.
 2. `cd` into `labelingsystem`: `cd /.../labelingsystem`.
 3. Install [virtualenv](https://github.com/pypa/virtualenv) using pip: `pip install virtualenv`.
 4. Create a new python3 virtualenv called `venv`: `virtualenv --python=/usr/bin/python3 venv`.
@@ -213,7 +213,7 @@ Allow from all
 1. `cd` into `labelingsystem`: `cd /.../labelingsystem`.
 2. Run `python3 manage.py collectstatic`. By default the collected static files will be stored in `/var/www/static`, but you can always move it to the `STATIC_DIR` you set in the `settings.py`.
 
-##### > Edit files Permission
+##### > Edit files Permission 
 1. `cd` into the folder that contains the project root folder `labelingsystem`.
 2. Edit permission of the root folder: `sudo chmod -R 644 labelingsystem`.
 3. Edit permission of the files in root folder: `sudo find labelingsystem -type d | xargs chmod 755`.
@@ -222,7 +222,7 @@ Allow from all
 6. `cd` into the folder that contains the `media` folder.
 7. Edit permission of the root folder: `sudo chgrp -R www-data media && sudo chmod -R g+w media`.
 
-##### >RUN
+##### > RUN
 Open any browser in your OS and reach `www.yourdomain.com`, you shall see the login page of the crowdtagger.
 
 ## Run the crowdtagger
@@ -245,11 +245,26 @@ As a superuser, you can change the status of an user anytime by following these 
 3. Click on the user email address you want to change its status.
 4. There are three possible status:
 * **Active**: user with lowest privilege, can only take task assigned by higher level users.
-* **Stuff**: user with privilege to create task/quiz and assign them to other users, can also take task themselves.
-* **Superuser**: user with highest privilege, in addition to stuff privilege can also view and modify the user status and task/quiz details.
-5. You can then change the status of an user by click the corresponding select boxes, e.g. if you want to change a user to stuff, you need to select both **active** and **stuff**.
+* **Staff**: user with privilege to create task/quiz and assign them to other users, can also take task themselves.
+* **Superuser**: user with highest privilege, in addition to staff privilege superuser can also view and modify the user status and task/quiz details.
+5. You can then change the status of an user by click the corresponding select boxes, e.g. if you want to change a user to stuff, you need to select both **active** and **staff**.
 ### Tutorial
 For more information, please refer to this [tutorial page](http://dblab-rack30.cs.ucr.edu/about/) to learn the details about the terminology and how to run the crowdtagger as different characters.
+## Caveats
+#### Q: What happens if I want to edit the code when it's already deployed using Apache?
+
+You must run `sudo apachectl restart` (in CENTOS 7.0) or `sudo systemctl restart apache2` (in Ubuntu 16.04) every time you make any changes to the code the reflect the changes
+#### Q: What happens if I want to edit the model description in the backend database?
+
+Aside from restart Apache service, you also need to Run `python3 manage.py makemigrations yourapp` to make migrations and `python3 manage.py migrate yourapp` to actually migrate the changes to the model in database.
+
+#### Q: Why is my webpage scrambled and does not appear correctly?
+Make sure you have run the `python3 manage.py collectstatic` and put the `static` folder in the correct place(specified in `STATIC_DIR`).
+
+#### Q: Why my webpage shows "you have no permission to access ..."?
+Make sure you set the correct permission to all files related to the project, please refer to Edit files Permission [Section](#edit-files-permission).
+#### Q: What if I have other errors when I try to deploy it using Apache?
+You should first run a direct server to make sure there is no error on Django side. Then you can view the error log of Apache `/var/log/httpd/access_log` (in CENTOS 7.0) or `/var/log/apache2/access.log` (in Ubuntu 16.04) to debug the Apache side.
 
 ## Your feedback
 
