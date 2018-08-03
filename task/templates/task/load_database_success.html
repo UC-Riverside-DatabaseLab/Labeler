@@ -1,0 +1,34 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Load Database Success
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Hi, {{ request.user }}!</h1>
+			<br>
+			<p>
+				You have successfully load the database!
+			</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<button type="button" onclick="window.open('', '_self', ''); window.close();">Close</button>
+
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

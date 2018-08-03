@@ -1,0 +1,57 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Preview Task
+</div>
+{% endblock breadcrumbs %}
+{% block content %}
+<style>
+li {
+    list-style: circle outside none;
+    margin-left: 3em;
+}
+
+ul {
+    margin: 1em;
+}
+</style>
+<div class="container-fluid">
+<h1> Task Info </h1>
+  <ul >
+    <li>task title: {{task_title}} </li>
+    <li>task description: {{task_description}} </li>
+    <li>number of labelers: {{task_num_labelers}} </li>
+    <li>num of posts: {{task_num_posts}} </li>
+    <li>using random label?: {{task_random_label}} </li>
+    <li>labels:</li>
+    <ul>
+    	{% for label in task_label %}
+    	<li>{{label}} </li>
+    	{% endfor %}
+	</ul>
+    <li>posts:</li>
+    <ul>
+    	{% for post in task_post %}
+    	<li>{{post}} </li>
+    	{% endfor %}
+	</ul>
+    <li>lablers:</li>
+    <ul>
+    	{% for labeler in participating_coders %}
+    	<li>{{labeler}} </li>
+    	{% endfor %}
+	</ul>
+  </ul>
+<h1> Quiz Info </h1>
+  <ul>
+    <li>quiz title: {{quiz_title}} </li>
+    <li>quiz description: {{quiz_description}} </li>
+    <li>max number of posts: {{max_posts}} </li>
+    <li>pass mark: {{pass_mark}} </li>
+</div>	
+<button type="fb-like" style="float: right;" onclick="javascript:window.close()">Close</button> 
+<button type="fb-like" style="float: right;" onclick="javascript:history.back()">Return</button> 
+{% endblock content %}

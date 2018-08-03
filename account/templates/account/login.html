@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'account/css/login-signup.css' %}">
+{% endblock extrastyle %}
+
+{% block body %}
+<body>
+  <div class="container">
+    <div class="middlePage">
+
+      <div class="page-header">
+        <h1 class="logo">CrowdTagger <small></small></h1>
+      </div>
+
+      <div class="panel panel-default">
+	 {% if messages %}
+	    <ul class="messages">
+		{% for message in messages %}
+		<li font-weight:bold;>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		{% endfor %}
+		<!--a href="{% url 'account:password_reset' %}" >Change Password</a-->
+		{% endif %}
+	    </ul>
+
+
+        <div class="panel-heading">
+          <h3 class="panel-title">Please Sign In</h3>
+        </div>
+        <div class="panel-body">
+
+          <div class="row">
+
+            <div class="col-md-12" style="border-left:1px solid #ccc;height:auto">
+              <form method="POST">
+                {% crispy form %}
+                <!--div class="spacing"><small>Don't have an account? </small><a href="{% url 'account:signup' %}" ><small>Register</small></a><br/></div-->
+		<div><small>Forgot password? </small> <a href="{% url 'account:forgot_password' %}"><small>Reset</small></a><br/></div>       
+                <div id="myText"><small>Don't have account? </small><small><a href = '/account/signup_alt'>Request Access</small></a><br/>
+	<!--form action="mailto:sara.alaee@gmail.com" method="post" enctype="text/plain">
+                        <input type="submit" value="Request Access">
+                </form-->
+
+	</div>
+		<!--form action="mailto:sara.alaee@gmail.com" method="post" enctype="text/plain">
+			<input type="submit" value="Request Access">
+		</form-->
+
+		<script type="text/javascript">
+			function sendMail() {
+    var link = "mailto:ucipt.labeling@gmail.com"
+             + "?cc="
+             + "&subject=" + escape("Request to Access to Social Post Analyzer System")            
+    ;
+
+    window.location.href = link;
+}
+		</script>
+		<div onclick="klikaj('rad1')"><small>About Us</small><small><font color="blue"> [view]</small></font></a><br/></div>
+		<div id="rad1" style="visibility: hidden"><small>                
+        This site was built to help with the collaborative labeling and its goal is to provide a platform for labelers from around the world to share the labeling tasks. The users of the site are assigned tasks with posts and labels. Each task has a description and labelers have to choose labels for different posts of different tasks. Their work will be evaluated by an algorithm. The overall score of all labelings for a single task based on the posts in that task will be reported in the site.</small> <a href=""><small> close</small>
+		</div>
+		  <script>
+		        function klikaj(i) { document.getElementById(i).style.visibility='visible'; }
+	          </script>
+
+       	      </form>
+	    <!--/div>
+	</div>
+	<div class="row">
+		<div id="thumb0" onclick="klikaj('rad1')"><small>Click Here</small></div>
+			<div id="rad1" style="visibility: hidden">
+        
+        
+        This site was built to help with the collaborative labeling and its goal is to provide a platform for labelers from around the world to share the labeling tasks. The users of the site are assigned tasks with posts and labels. Each task has a description and labelers have to choose labels for different posts of different tasks. Their work will be evaluated by an algorithm. The overall score of all labelings for a single task based on the posts in that task will be reported in the site.
+         <script>
+        function klikaj(i) { document.getElementById(i).style.visibility='visible'; }
+        </script>
+
+        </div>
+
+          
+	
+	
+	
+	This site was built to help with the collaborative labeling and its goal is to provide a platform for labelers from around the world to share the labeling tasks. The users of the site are assigned tasks with posts and labels. Each task has a description and labelers have to choose labels for different posts of different tasks. Their work will be evaluated by an algorithm. The overall score of all labelings for a single task based on the posts in that task will be reported in the site.
+	
+	</div>
+	<script>
+	function klikaj(i) { document.getElementById(i).style.visibility='visible'; }
+	</script-->
+		</div>
+	</div>
+    </div>
+  </div>
+</body>
+{% endblock body %}
+

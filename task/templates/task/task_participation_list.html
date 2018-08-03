@@ -1,0 +1,83 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Task Participation List
+</div>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+
+<div class="container-fluid">
+	<!--table class="table table-striped">
+		<thead>
+			<tr class="table-head">
+				<th>Task</th>					
+				<th>No. of Assigned Labelers</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for row in array %}
+				<tr>
+					{% for col in row %}
+						<td>{{ col }}</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table-->
+	<div class="col-sm-12">
+		<table class="table table-striped">
+			<thead>			
+				<tr class="table-head">
+					<th>Task</th>
+					<th>Labeler List</th><th></th>
+				</tr>
+			</thead>
+			
+			<tbody>		
+		
+			{% for row in array %}<tr>
+					
+				<!--div class="cta-id">
+					<p>{{ task.creator_id }}</p>
+				</div-->
+				<!--div class="cta-id">						
+					<td>{{ task.num_labelers }}</td>						
+				</div-->
+			
+				
+				{% for col in row %}
+				<td>
+					{% if forloop.counter == 1 %}					
+				<!--a href="{%url 'task:update_labeler'%}"> {{ col }}</a-->				
+					<a href="/task/update_labeler?pk={{ row.0 }}&&id={{row.0.id}}&&clist={{row.1}}">{{ col }}</a>
+					
+					{% else %}
+						{% for t in col %}
+							{{ t }}</br>
+						{% endfor %}				
+					{% endif %}
+				</td>
+				{% endfor %}
+				<td><a href="/task/update_labeler?pk={{ row.0 }}&&id={{row.0.id}}&&clist={{row.1}}" 
+					class="btn btn-sm btn-block btn-default">Edit</a></td>
+						
+			{% endfor %}
+			</tr>		
+			
+		
+			</tbody>
+		</table>
+	</div>
+</div>
+{% endblock content %}

@@ -1,0 +1,17 @@
+{% extends "base_site.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Load Database
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+	{% crispy form  %}
+
+</div>	
+{% endblock content %}

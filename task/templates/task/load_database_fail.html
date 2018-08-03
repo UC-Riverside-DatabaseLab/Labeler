@@ -1,0 +1,44 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Load Database Fail
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Hi, {{ request.user }}!</h1>
+			<br>
+			<p>
+				Connection to the database is refused! 
+			</p>
+			<p>
+			{% if error %}
+			<b>ERROR</b>: {{error}}
+			{% endif %}
+			</p>
+			<p>
+			{% if code %}
+			<b>CODE</b>: {{code}}
+			{% endif %}
+			</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<input type=button value="Return" onClick="javascript:history.go(-1);">
+
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

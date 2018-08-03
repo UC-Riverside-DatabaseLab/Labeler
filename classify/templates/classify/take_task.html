@@ -1,0 +1,117 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'task/css/take_task.css' %}">
+{% endblock extrastyle %}
+
+{% block extrascript %}
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+<script src="http://malsup.github.com/jquery.form.js"></script> 
+<script type="text/javascript" src="{% static 'task/js/take_task.js' %}"></script>
+{% endblock extrascript %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}"> Home </a>
+&rsaquo;
+<a href="{% url 'task:task_list' %}"> Task List </a>
+&rsaquo; Take Task
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+	<div id="prolog">
+		<div class="row">
+			<div class="col-md-12">
+				<h1></h1>
+				<!--p style="text-align: center;">
+					 You have labeled "{{ num_labeled }}" posts out of "{{ task.num_posts }}" posts so far!			
+				</p>
+				<p style="text-align: center;">Continue labeling or press <a href="{% url 'task:task_list' %}">Exit</a> to return to the tasks list!</p> 
+				<p style="text-align: center;">-------------------------------------------------------</p-->
+				
+				<br>
+				<br>
+			</div>
+			
+		</div>
+		<div class="row">
+			<div class="col-md-12" style="text-align: center;">
+				<!--div class="btn btn-info btn-lg start_task">Continue</div-->
+			</div>
+		</div>
+	</div>
+	
+	<form id="post_form" action="{% url 'response:create_post_response' task.pk post.pk %}" method="POST">
+		{% csrf_token %} 
+		
+			<!--button onclick="move()">Click Me</button--> 
+			<style>
+			#myProgress {
+			  width: 100%;
+			  background-color: #ddd;
+			}
+
+			#myBar {
+			  width: 10%;
+			  height: 30px;
+			  background-color: #4CAF50;
+			  text-align: center;
+			  line-height: 30px;
+			  color: white;
+			}
+			</style>
+			<h1>Task Title :  {{task}}</h1>
+			<h2>Labeling Progress</h2>
+			<div id="myProgress">			   				
+			  <div id="myBar" style="width:{{scaled}}%; height:30px; background-color: #4CAF50;">{{num_labeled}}/{{task.num_posts}}</div>
+			</div>
+			
+				<br>
+				<br>
+		<div class="row" >
+			
+
+			<div class="col-sm-12">
+				<div class="loader">
+					<div class="card">
+
+						<div class="post">
+							<h3>
+								<span id="post_{{ post.id }}"> {{ post }}</span>
+							</h3>
+						</div>
+						<ul>
+
+							{% for label in label_list %}
+							<li class="btn btn-default">
+								<input id="label_{{ label.id }}" type="radio" name="post_{{ post.id }}" value="{{ label.id }}">
+								<label for="label_{{ label.id }}" class="element-animation">{{ label }}</label>
+								 
+								<div class="check"></div>
+							</li>
+							
+							{% endfor %}
+								
+
+						</ul>
+					</div>
+				</div>
+				<div class="text-muted">
+					<span class="label"></span>
+				</div>
+				
+			</div>
+			
+
+		</div>
+		<div class="col-md-12" style="text-align: left;">
+					<a href="{% url 'task:task_list' %}" class="btn btn-info btn-lg">Exit Task</a>
+		</div>	
+	</form>
+
+</div>
+{% endblock content %}

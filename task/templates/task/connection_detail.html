@@ -1,0 +1,87 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+{% load check_prerequisite %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; Connection List
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<h1>database: {{connection.dbname}}</h1>
+<div id="table_content">
+</div>
+<script>
+function goBack() {
+    window.history.back()
+}
+$(document).ready(function(){
+  $.post('/task/create_task/get_table_all/',
+    {
+      'connection_id': {{connection.id}}
+    },
+    function(data){
+	console.log(data);
+	var tablecontent = document.getElementById("table_content");
+        var html = "";
+	var is_mysql = "{{connection.is_mysql}}";
+	if(is_mysql === "True") {
+		for(var i in data){
+		    var key = i;
+		    html += "<h2>";
+		    html += key;
+		    html += "</h2>";
+		    html += "<table>";
+		    var val = data[i];
+			$.each(val, function (index, item) {
+				if (index === 0) {
+				    html += "<tr>";
+				    $.each(item, function (vlaIndex) {
+					html += "<td>";
+					html += vlaIndex;
+					html += "</td>";
+				    });
+				    html += "</tr>";
+				}
+				html += "<tr>";
+				$.each(item, function (vlaIndex, valItem) {
+				    html += "<td>";
+				    html += valItem;
+				    html += "</td>";
+				});
+				html += "</tr>";
+			    });
+			html += "</table>";
+		}
+	}
+	else {
+		for(var i in data){
+		    var key = i;
+		    html += "<h2>";
+		    html += key;
+		    html += "</h2>";
+		    var val = data[i];
+		    $.each(val, function (index, item) {
+			    html += "<p>";
+			    var each_val = JSON.stringify(item, null, 2);
+			    html += each_val;
+			    html += "</p>";
+	 	    });
+		}
+	}
+	console.log(html)
+	tablecontent.innerHTML = html;
+  });
+});
+</script>
+<br></br>
+<button type="fb-like" style="float: right;" onclick="javascript:window.close()">Close</button>  
+<button type="fb-like" style="float: left;" onclick="goBack()">Return</button>
+{% endblock %}

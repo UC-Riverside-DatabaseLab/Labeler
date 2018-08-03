@@ -1,0 +1,14 @@
+Django==1.11.4
+psycopg2==2.7.1
+django-bootstrap3==8.2.3
+django-crispy-forms==1.6.1
+Pillow==4.2.1
+django-admin-view-permission
+django-username-email
+nltk
+flask
+django-smart-selects
+unicodecsv
+django_select2
+requests
+pymysql

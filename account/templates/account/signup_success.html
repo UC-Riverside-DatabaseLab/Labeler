@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block extrastyle %}
+<link rel="stylesheet" type="text/css" href="{% static 'account/css/login-signup.css' %}">
+{% endblock extrastyle %}
+
+{% block body %}
+<body>
+<div class="container-fluid">
+    <div class="middlePage">
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<br>
+			<p>
+				You have successfully submit your application!
+			</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<button type="button" onclick="window.history.go(-2); return false;">Return</button>
+
+			</a>
+		</div>
+	</div>
+  </div>
+</div>
+</body>
+{% endblock body %}
+

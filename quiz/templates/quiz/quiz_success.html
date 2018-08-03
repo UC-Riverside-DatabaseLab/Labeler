@@ -1,0 +1,27 @@
+{% extends "base_site.html" %}
+
+{% block content %}
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Congratulation, {{ request.user }}!</h1>
+			<br>
+			<p>
+				You have passed the quiz! Now you are ready to work on actual task!
+			</p>
+			<p>Please click the button below to continue with the actual task.</p>
+			<br>
+			<br>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<a href="{% url 'task:take_task' task.pk %}">
+				<div class="btn btn-info btn-lg start_quiz">Start</div>
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

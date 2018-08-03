@@ -1,0 +1,75 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+{% load check_prerequisite %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; Connection List
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+    <h1>Connection List</h1>
+
+    {% if connection_list %}
+	<h2>Mysql:</h2>
+<table>
+  <tr>
+    <th>connection</th>
+    <th>username</th>
+    <th>ip</th>
+    <th>database name</th>
+    <th>port number</th>
+    <th>delete</th>
+  </tr>
+      {% for connection in connection_list %}
+	{% if connection.is_mysql %}
+  <tr>
+    <td><a href="{{ connection.get_absolute_url }}">{{ connection }}</a> </td>
+    <td>{{ connection.username }}</td>
+    <td>{{ connection.ip }}</td>
+    <td>{{ connection.dbname }}</td>
+    <td>{{ connection.port }}</td>
+    <td><a href="delete_connection/?id={{connection.id}}"><i class="fa fa-trash"></i></a></td>
+  </tr>
+	{% endif %} 
+      {% endfor %}
+</table>
+
+	<h2>AsterixDB:</h2>
+<table>
+  <tr>
+    <th>connection</th>
+    <th>ip</th>
+    <th>database name</th>
+    <th>port number</th>
+    <th>delete</th>
+  </tr>
+      {% for connection in connection_list %}
+	{% if not connection.is_mysql %}
+  <tr>
+</form></td>
+    <td><a href="{{ connection.get_absolute_url }}">{{ connection }}</a> </td>
+    <td>{{ connection.ip }}</td>
+    <td>{{ connection.dbname }}</td>
+    <td>{{ connection.port }}</td>
+    <td><a href="delete_connection/?id={{connection.id}}"><i class="fa fa-trash"></i></a></td>
+  </tr>
+	{% endif %} 
+      {% endfor %}
+</table>
+
+    {% else %}
+      <p>There is no connection.</p>
+    {% endif %}  
+<br></br>
+<div> 
+<button type="fb-like" style="float: right;" onclick="javascript:window.close()">Close</button> 
+</div>    
+{% endblock %}

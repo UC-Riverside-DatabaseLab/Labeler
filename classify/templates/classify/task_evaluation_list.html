@@ -1,0 +1,113 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+{% load check_prerequisite %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+
+&rsaquo; Task Evaluation List
+</div>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+<div class="container-fluid">
+	<!--table class="table table-striped">
+		<thead>
+			<tr class="table-head">
+				<th>Task</th>					
+				<th>No. of Assigned Labelers</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for row in array %}
+				<tr>
+					{% for col in row %}
+						<td>{{ col }}</td>
+					{% endfor %}
+				</tr>
+			{% endfor %}
+		</tbody>
+	</table-->
+	<div class="col-sm-12">
+		<table class="table table-striped"><thead><!--div class="col-md-9 cta-contents"-->
+		<tr class="table-head">
+		<th>Task</th><!--/h1-->
+		<th>Labelers List</th>
+		<th></th></tr></thead>
+		<tbody>		
+		
+		{% for row in array %}<tr>
+					
+				<!--div class="cta-id">
+					<p>{{ task.creator_id }}</p>
+				</div-->
+				<!--div class="cta-id">						
+					<td>{{ task.num_labelers }}</td>						
+				</div-->
+														
+				<td><a href="/task/task_evaluation_detail/{{ row.0.pk }}">{{row.0}}</a></td>
+				
+				<td>
+				{% for col in row.2 %}
+					
+					{{col}}<br/>
+													
+				{% endfor %}
+				</td>	
+				{% for task in task_list %}
+					{% if forloop.parentloop.counter == forloop.counter %}
+						{% check_prerequisite task request.user as prerequisite_satisfied %}
+						<td><a href="{% url 'task:task_evaluation_detail' task.pk %}" class="btn btn-block btn-default">See Evaluations</a></td>	
+					{% endif %}
+					
+				{% endfor %}	
+	
+		{% endfor %}
+					
+		
+		</tr>
+		</tbody></table>
+	</div>
+</div>
+<div class="container-fluid">
+	<div class="col-sm-12">
+		<table class="table table-striped"><thead><!--div class="col-md-9 cta-contents"-->
+		<tr class="table-head">
+		<!--th>Labeler</th><!--/h1-->
+		<!--th>No. of Labeled Tasks</th></tr></thead-->
+			
+		<th>Labeler</th>
+		<th>No. of Labeled Tasks</th></tr>
+		{% for ky in counter.0 %}
+		<tr>		
+			<td>{{ky}}</td>			
+			
+			  {% for ky1 in counter.1 %}
+			  {% if forloop.parentloop.counter == forloop.counter %}			   
+			    <td>{{ky1}}</td>
+			  {% endif %}
+			  {% endfor %}										
+					
+		</tr>						
+										
+		{% endfor %}			
+		
+		
+		<!--thead><tr class="table-head"><th>No. of Labeled Tasks</th-->
+		
+					
+
+		<!--/tr-->
+		</table>
+	</div>
+	
+</div>
+{% endblock content %}

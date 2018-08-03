@@ -1,0 +1,25 @@
+{% extends "base_site.html" %}
+
+{% load crispy_forms_tags %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+{%if user.is_superuser %}
+<a href="{% url 'super_admin_index' %}">SuperAdmin Home </a>
+
+{% else  %}
+<a href="{% url 'admin_index' %}">Admin Home </a>
+{% endif %}
+&rsaquo;
+&rsaquo; Edit Task
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+	{% crispy form  %}
+
+</div>	
+{% endblock content %}

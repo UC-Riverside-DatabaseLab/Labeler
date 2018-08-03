@@ -1,0 +1,169 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; SuperAdmin Home
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+	<div class="col-sm-6">
+
+		<div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Create New Task &nbsp <a href="{% url 'task:create_task' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+					<div class="cta-desc">
+						<p>Step by step interface to create and send new task.</p>
+					</div>
+				</div>				
+				<div class="col-md-3 cta-button">
+					<!--a href="{% url 'task:create_task' %}" class="btn btn-lg btn-block btn-default">Start</a-->
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Edit Task &nbsp <a href="/admin/task/task/"<span class="glyphicon glyphicon-pencil"></span></a></h1>
+					<div class="cta-desc">
+						<p>Step by step interface to edit existing task.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<!--a href="/admin/task/task/" class="btn btn-lg btn-block btn-default">Start</a-->
+				</div>	
+			</div> 
+		</div>
+		<div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Create New Quiz &nbsp <a href="{% url 'quiz:create_quiz' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+					<div class="cta-desc">
+						<p>Step by step interface to create and send new Quiz.</p>
+					</div>
+				</div>				
+				<div class="col-md-3 cta-button">
+					<!--a href="{% url 'quiz:create_quiz' %}" class="btn btn-lg btn-block btn-default">Start</a-->
+				</div>				
+			</div>
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Edit Quiz &nbsp  <a href="/admin/quiz/quiz/"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+					<div class="cta-desc">
+						<p>Step by step interface to edit existing quiz.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<!--a href="/admin/quiz/quiz/" class="btn btn-lg btn-block btn-default">Start</a-->
+				</div>	
+			</div> 
+		</div>
+			<div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Add/Remove Labeler &nbsp <a href="{% url 'task:task_participation_list'%}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+					<div class="cta-desc">
+						<p>Add or remove labeler to tasks.</p>
+					</div>
+				</div>				
+				<div class="col-md-3 cta-button">
+					<!--a href="{% url 'task:task_participation_list'%}" class="btn btn-lg btn-block btn-default">Start</a-->
+				</div>				
+			</div>			
+		</div>
+		<div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Monitor Task Progress <a href="{% url 'task:task_evaluation_list' %}"><span class="glyphicon glyphicon-list-alt"></span></a></h1>
+					<div class="cta-desc">
+						<p>Evaluate the task you have assigned to the labelers.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<!--a href="{% url 'task:task_evaluation_list' %}" class="btn btn-lg btn-block btn-default">View Progress</a-->
+				</div>
+			</div>
+		</div>
+		<div class="bs-calltoaction bs-calltoaction-info">
+                        <div class="row">
+                                <div class="col-md-9 cta-contents">
+                                        <h1 class="cta-title">Administration View <a href="/admin/"><span class="glyphicon glyphicon-list-alt"></span></a></h1>
+                                        <div class="cta-desc">
+                                                <p>View database</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 cta-button">
+                                        <!--a href="/admin/" class="btn btn-lg btn-block btn-default">View</a-->
+                                </div>
+                        </div>
+                </div>
+
+
+		{% if user.is_staff or user.is_superuser %}
+
+		<!--div class="bs-calltoaction bs-calltoaction-info">
+			<div class="row">
+				<div class="col-md-9 cta-contents">
+					<h1 class="cta-title">Site Administration <span class="glyphicon glyphicon-pencil"></span></h1>
+
+					<div class="cta-desc">
+						<p>Go directly to the django admin site where you can view and make changes to the database.</p>
+					</div>
+				</div>
+				<div class="col-md-3 cta-button">
+					<a href="{% url 'admin:index' %}" class="btn btn-lg btn-block btn-default">Inspect</a>
+				</div>
+			</div>
+		</div-->
+			
+		{% endif %}
+
+	</div>
+	
+
+	<div class="col-sm-6">
+		 <div class="bs-calltoaction bs-calltoaction-info">
+                         <div class="row">
+                                <div class="col-md-9 cta-contents">
+                                        <h1 class="cta-title">Build Classifier &nbsp <a href="{% url 'classify:create_classification_model' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+                                        <div class="cta-desc">
+                                                <p>Step by step interface to build a classifier.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 cta-button">
+                                        <!--a href="{% url 'classify:create_classification_model' %}" class="btn btn-lg btn-block btn-default">Start</a-->
+                                </div>
+                        </div>
+
+		</div>
+
+	</div>
+	<div class="col-sm-6">
+                 <div class="bs-calltoaction bs-calltoaction-info">
+                         <div class="row">
+                                <div class="col-md-9 cta-contents">
+                                        <h1 class="cta-title">Classify data &nbsp <a href="{% url 'task:create_task' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+                                        <div class="cta-desc">
+                                                <p>Step by step interface to classify data.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 cta-button">
+                                        <!--a href="{% url 'task:create_task' %}" class="btn btn-lg btn-block btn-default">Start</a-->
+                                </div>
+                        </div>
+
+                </div>
+
+        </div>
+
+</div>
+
+</div>
+{% endblock content %}

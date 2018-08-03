@@ -1,0 +1,76 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+{% load check_prerequisite %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; Task List
+</div>
+{% endblock breadcrumbs %}
+
+
+{% block content %}
+<div class="container-fluid">
+	<div class="col-sm-12">
+		
+		{% for task in task_list %}
+			{% for row in task_complete_list %}	
+			       {% if row == False  and forloop.parentloop.counter == forloop.counter%}
+				<div class="bs-calltoaction bs-calltoaction-incomplete">
+				<div class="row">
+					<div class="col-md-9 cta-contents">
+						<h1 class="cta-title">{{ task }}</h1>
+						<div class="cta-desc">
+							<p>{{ task.description }}</p>
+						</div>
+					</div>
+				
+					<!--h1>Thank you, {{ request.user }}!</h1-->			
+					
+					<!--p>Please click the button below to return to the task list.</p-->
+					
+					<div class="col-md-3 cta-button">
+						{% check_prerequisite task request.user as prerequisite_satisfied %}
+						<a href="{% if prerequisite_satisfied %}{% url 'task:take_task' task.pk %}{%else %}
+						{% url 'quiz:take_quiz' task.prerequisite.pk %}{% endif %}" 
+						class="btn btn-lg btn-block btn-default">Continue Working</a>
+					</div>
+				</div></div>
+				
+				{% elif row == True and forloop.parentloop.counter == forloop.counter%}
+			
+				<div class="bs-calltoaction bs-calltoaction-complete">
+				<div class="row">
+					<div class="col-md-9 cta-contents">
+						
+						<h1 class="cta-title">{{ task }}</h1>
+						<div class="cta-desc">
+							<p>{{ task.description }}</p>
+						</div>
+						
+					</div>	
+					<!--div class="col-md-3 cta-button"><a href="" class = "btn btn-lg btn-block btn-default">Complete</a></div-->
+					<div class="col-md-3 cta-button">
+						{% check_prerequisite task request.user as prerequisite_satisfied %}
+						<a href="{% if prerequisite_satisfied %}{% url 'task:take_task' task.pk %}{%else %}
+						{% url 'quiz:take_quiz' task.prerequisite.pk %}{% endif %}" 
+						class="btn btn-lg btn-block btn-default">View Details</a>
+					</div>		
+				<!--h1>Thank you, {{ request.user }}!</h1-->			
+				</div></div>	
+				{% endif %}
+								
+			{% endfor %}
+			
+				
+		{% endfor %}
+
+	</div>
+</div>
+{% endblock content %}

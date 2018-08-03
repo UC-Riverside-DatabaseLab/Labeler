@@ -1,0 +1,420 @@
+{% extends "base_site.html" %}
+
+{% load static crispy_forms_tags %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo; About
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<div class="container-fluid">
+
+<style>
+html {
+  box-sizing: border-box;
+}
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+.column {
+  float: left;
+  width: 25%;
+  margin-bottom: 16px;
+  padding: 0 8px;
+}
+
+@media (max-width: 300px) {
+  .column {
+    width: 100%;
+    display: block;
+  }
+}
+
+.card {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+}
+
+.container {
+  padding: 0 16px;
+}
+
+.container::after, .row::after {
+  content: "";
+  clear: both;
+  display: table;
+}
+
+.title {
+  color: grey;
+}
+
+.button {
+  border: none;
+  outline: 0;
+  display: inline-block;
+  padding: 8px;
+  color: white;
+  background-color: #000;
+  text-align: center;
+  cursor: pointer;
+  width: 100%;
+}
+
+.button:hover {
+  background-color: #555;
+}
+  </style>
+  <style>
+  body {
+      position: relative;
+  }
+  ol.nav-pills {
+      top: 100px;
+      position: fixed;
+      left: 25px;
+  }
+   #section1 {color: #fff; background-color: #1E88E5;}
+  #section21 {color: #fff; background-color: #1E88E5;}
+  #section22 {color: #fff; background-color: #1E88E5;}
+  #section23 {color: #fff; background-color: #1E88E5;}
+  #section31 {color: #fff; background-color: #1E88E5;}
+  #section32 {color: #fff; background-color: #1E88E5;}
+  #section33 {color: #fff; background-color: #1E88E5;}
+  #section34 {color: #fff; background-color: #1E88E5;}
+  #section35 {color: #fff; background-color: #1E88E5;}
+  #section36 {color: #fff; background-color: #1E88E5;}
+  #section37 {color: #fff; background-color: #1E88E5;}
+  #section4 {color: #fff; background-color: #1E88E5;}
+  @media screen and (max-width: 1000px) {
+    #section1, #section2, #section3, #section41, #section42  {
+        margin-left: 350px;
+    }
+  }
+  </style>
+</head>
+<body data-spy="scroll" data-target="#myScrollspy" data-offset="100">
+    <nav class="col-sm-3" id="myScrollspy">
+      <ol class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#section1">Member</a></li>
+                <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Basic Information<span class="caret"></span></a>
+          <ol type="1" class="dropdown-menu">
+            <li><a href="#section21">About the Website</a></li>
+            <li><a href="#section22">Roles and Activities</a></li>
+            <li><a href="#section23">Explanation of Terms</a></li>                     
+          </ol>
+        </li>
+        
+        <li class="dropdown">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">How to All <span class="caret"></span></a>
+          <ol type="1" class="dropdown-menu">
+            <li><a href="#section31">Basic Usage</a></li>
+            <li><a href="#section32">create task</a></li>
+            <li><a href="#section33">manage database</a></li>
+            <li><a href="#section34">edit task</a></li>
+            <li><a href="#section35">create/edit quiz</a></li>
+            <li><a href="#section36">evaluate  task</a></li>
+            <li><a href="#section37">take task</a></li>                   
+          </ol>
+        </li>
+        <li><a href="#section4">Contact</a></li>
+      </ol>
+    </nav>
+<h1 id="section1">People</h1>
+<!--p>Resize the browser window to see the effect.</p-->
+
+<div class="row">
+  <div class="column">
+    <div class="card">
+      <img src="/media/sara44.jpg" alt="Sara" style="width:100%;height:180px;">
+      <div class="container">
+        <h3>Sara AlaeeJordehi</h3>
+        <p class="title">PhD Student</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>salae001@ucr.edu</p-->
+	<p><a href="mailto:salae001@ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+  <div class="column">
+    <div class="card">
+      <img src="/media/Ryan.jpg" alt="Ryan" style="width:100%;height:180px;">
+      <div class="container">
+        <h3>Ryan Rivas</h3>
+        <p class="title">PhD Student</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p></p-->
+        <p><a href="mailto:rriva002@ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+
+  <!--div class="column"></div-->
+  <div class="column">
+    <div class="card">
+      <img src="/media/algan44.jpg" alt="Algan" style="width:100%;height:180px;">
+      <div class="container">
+        <h3> Algan Binggi Rustinyato</h3>
+        <p class="title">Intern</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>howardhuang@ucla.edu</p-->
+	<p><a href="mailto:howardhuang@ucla.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+    <div class="column">
+    <div class="card">
+      <img src="/media/algan44.jpg" alt="Nan" style="width:100%;height:180px;">
+      <div class="container">
+        <h3> Nan Zhang</h3>
+        <p class="title">M.S student</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>howardhuang@ucla.edu</p-->
+	<p><a href="mailto:nzhan005@ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+
+</div>
+<div class="row">
+ <div class="column">
+    <div class="card";">
+      <img src="/media/vagelis444.jpg" alt="Vagelis" style="width:100%;height:180px;">
+      <div class="container">
+        <h2>Dr. Vagelis Hristidis</h2>
+        <p class="title">Supervisor</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <!--p>vagelis@cs.ucr.edu</p-->
+	<p><a href="mailto:vagelis@cs.ucr.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+  <!--div class="column"></div-->
+  <div class="column">
+    <div class="card">
+      <img src="/media/sean44.jpg" alt="Sean" style="width:100%;height:180px;">
+      <div class="container"> 
+        <h2>Dr. Sean Young</h2>
+        <p class="title">Supervisor</p>
+        <!--p>Some text that describes me lorem ipsum ipsum lorem.</p-->
+        <p><a href="mailto:youngsean@ucla.edu">Contact</a></p>
+        <!--p><button class="button">Contact</button></p-->
+      </div>
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+
+  <div class="row">
+    <!--div class="col-md-4 col-md-offset-4"-->
+	<h1 id="section21">About The Website</h1>
+	
+         <b>CrowdTagger</b> is a website developed by two students, Algan Binggi Rustinyato and Sara AlaeeJordehi, who worked as intern and PhD student, respectively, under supervision of Dr. Vagelis Hristidis at University of California Riverside and Dr. Sean Young at University of California Los Angeles.<br/> 
+</div>
+ <div class="row">
+	
+	The site was built to help with the collaborative labeling and its goal is to provide a platform for 
+	labelers from around the world to share the labeling tasks. The users of the site are assigned tasks with posts and labels. Each task has a description and labelers have to choose labels for different posts of different tasks. Their work will be evaluated by an algorithm. The overall score of all labelings for a single task based on the posts in that task will be reported in the site.<br/>
+	<!--p>
+	Need more information? <a href="mailto:ucipt.labeling@gmail.com"> Contact us </a>
+	</p-->
+      
+    </div>
+   
+
+
+	<div  class="row">
+	   <h1 id="section22">Roles and Activities</h1>
+	
+
+        	There are two roles assigned to people in this site : Admin and Labeler. Labelers choose labels for each post in the tasks assigned to them. Admins monitor the labelers' progress and observe the statistics.<br/>
+		<dl>
+			<dt>Admin's activities include : </dt>
+				
+				<li>Create and Edit Tasks</li>
+				<li>Create and Edit Quizzes for the Tasks</li>
+				<li>Add Labelers to the Tasks</li>
+				<li>Monitor the Labelers' Progress</li>
+			
+			<dt>Labeler's activities include : </dt>
+				<li>Taking Quiz</li>
+				<li>Labeling Posts</li>
+		</dl>
+		
+			<div class="row">
+	   <h1 id="section23">Terms Explanation</h1>
+        	There are two terms used in this site : Task and quiz. Task is created by admin and finished by labelers, quiz is created along with task and must be finished by each labeler before he/she can start answering the task.
+        	<br/>
+		<dl>
+			<dt>A typical Task has: </dt>
+				<li>Title: must be unique.</li>
+				<li>Description (optional)</li>
+				<li>Labelers: a group of user that are assigned to this task, each labeler will be assigned some posts and need to respond with the most appropriate label.</li>
+				<li>Labels: a list of possible labels that each labeler need to choose from.</li>
+				<li>Posts: a list of posts that each labeler need to respond to.</li>
+				<li>Evaluation: evaluation measured from the results of all labelers, can be viewed by the creator.</li>
+			
+			<dt>A typical Quiz has: </dt>
+				<li>Title: must be unique.</li>
+				<li>Description (optional)</li>
+				<li>Passmark: a mark the labeler must achieve in order to answer the task.</li>
+				<li>Post and Label: taking a quiz is similar to taking a task, but in the quiz each question has onlt one correct answer, labeler must answer the quiz and get enough credit in order to take the task.
+		</dl>
+		
+	<h1 id="section31">How to Use the Website</h1>
+	    <dt>If you are an admin : </dt>
+		<ol type="I">
+				<li>Create your quiz <a href="http://dblab-rack30.cs.ucr.edu/quiz/create_quiz/">here</a>.(optional)</li>
+				<li>Prepare all your data in a csv file or create a database connection <a href="http://dblab-rack30.cs.ucr.edu/task/load_database/">here</a>.</li>
+				<li>Create your task <a href="http://dblab-rack30.cs.ucr.edu/task/create_task/">here</a>, you can use the quiz you created in the first step and the data you prepared in the second step.</li>
+				<li>Once the task is successfully created, you can monitor the progress of the task <a href="http://dblab-rack30.cs.ucr.edu/task/task_evaluation_list/">here</a>, wait until at least one labeler finish his/her task.</li>
+				<li>Then you can view the evaluation result <a href="http://dblab-rack30.cs.ucr.edu/task/task_evaluation_list/">here</a>, you can also download the evaluation results in a csv file.</li>
+		</ol>
+		<dt>If you are a labeler : </dt>
+				<ol type="I">
+				<li>Take your quiz <a href="dblab-rack30.cs.ucr.edu/task/task_list/">here</a> if your task has one.</li>
+				<li>Once you complete the quiz, you can continue to take the task. The progress bar will turn green once you finish the minimal requirement of the task and you can click exit to quit current task(you don't need to take all the questions for one task), but you can always come back and take more questions.</li>
+		</ol>
+        <!--p>
+        Need more information? <a href="mailto:ucipt.labeling@gmail.com"> Contact us </a>
+        </p-->
+
+    	<h1 id="section32">How to create new task</h1>
+	To create new task, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/task/create_task/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Enter the title of the task, e.g., "my-task". </li>
+				<li>Enter the task description(optional).</li>
+				<li>Enter min number of posts, your posts should contains at least this number of rows.</li>
+				<li>Enter min number of labelers, you should at least assign task to this number of labelers.</li>
+				<li>Load post and label data.</li>
+				<ul>
+					<li>You can choose to load post/label from a csv file(in <a href="/media/sample_survey1.csv" download="sample_survey1.csv">this sample format</a>)</li>
+ 					<li>Or load from existing database(see next section).</li>
+					<li>You can view your data imediately after you upload your csv file or choose your post table.</li>
+					<img src="/media/view_csv.png" alt="Algan" style="height:75%;width:75%">
+				</ul>
+				<li>Choose the quiz for this task, or create one <a href="http://dblab-rack30.cs.ucr.edu/quiz/create_quiz/">here</a>(optional).</li>
+				<li>Enter the labelers to participate in the task, separated by line.</li>
+				<li>Click submit once you think everything is correct.</li>
+		</ol>
+	If you see this page after submission, that means your task is successfully created!
+	<img src="/media/createtask_success.png" alt="Algan" style="height:75%;width:75%">
+
+	<h1 id="section33">How to manage database connection</h1>
+	To create new connection to database, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/task/load_database/">page</a> or use the popup window in the create task <a href="http://dblab-rack30.cs.ucr.edu/task/create_task/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Select the type of database you want to connect to(currently support mysql and asterixdb).</li>
+				<li>Enter all neccessary information to connect to the database.</li>
+				<li>Click submit once you think everything is correct.</li>
+		</ol>
+	If you see this page after submission, that means your have successfully connect to the database, otherwise please carefully check the information you provided and make sure that your database allows connection from the host server(<b>169.235.27.196</b>).
+	<img src="/media/loaddatabase_success.png" alt="Algan" style="height:75%;width:75%"><br>
+	To manage existing connection to database, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/task/connection_list/">page</a> or use the popup window in the create task <a href="http://dblab-rack30.cs.ucr.edu/task/create_task/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Click the connection name if you want to see the details of the connection.</li>
+				<img src="/media/connection_list.png" alt="Algan" style="height:75%;width:75%">
+				<li>You can view a snippet(max 10 rows) of each table in current database.</li>
+				<img src="/media/connection_detail.png" alt="Algan" style="height:75%;width:75%">
+				<li>Click on the trash icon if you want to delete the connection.</li>
+		</ol>
+	To create task from database connections, you need to perform following steps:
+		<ol type="1">
+				<li>Choose load from database in the create task page and make sure you have already create at least one database connection through above steps.</li>
+				<li>Select database name, post table name, post column name sequentially. Your first choice will limit your selection of the second choice(cascade selection), so if you want to start over, simply click the small crossmark to delete current choice.</li>
+				<img src="/media/loaddatabase.png" alt="Algan" style="height:75%;width:75%">
+				<li>Type in your labels, separated by ";".</li>
+		</ol>
+	You can also peek your selected table once you select your post tabel name, if you meet any display error like the choice won't show, please refresh.The implementation of popup window is not robust enough and may have several bugs, so considering use direct link for secured operation.<br>
+
+
+	<h1 id="section34">How to edit existing task</h1>
+	To edit existing task, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/admin/task/task/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Choose a task in the task list and click on it's title. </li>
+				<li>Then you can change the title, description, quiz or order of current task, changing the min posts/labeler is not recommended.</li>
+				<li>Click submit once you think everything is correct.</li>
+		</ol>
+	To edit labelers for existing task, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/task/task_participation_list/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Choose a task in the task list and click on edit. </li>
+				<li>Then you can change the existing labelers by typing new new labeler or remove existing one.</li>
+				<li>Click submit once you think everything is correct.</li>
+		</ol>
+	You should see a similar success page if your edit is successful.
+
+	<h1 id="section35">How to create/edit quiz</h1>
+	To create new quiz, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/quiz/create_quiz/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Enter the title of the quiz, e.g., "my-quiz". </li>
+				<li>Enter the quiz description(optional).</li>
+				<li>Enter min number of questions, your questions should contains at least this number of rows.</li>
+				<li>Enter the pass mark.</li>
+				<li>Load question data from a csv file(in <a href="/media/sample_quiz.csv" download="sample_quiz.csv">this sample format</a>)</li>
+				<li>Click submit once you think everything is correct.</li>
+		</ol>
+	To edit current quiz, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/admin/quiz/quiz/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Choose a quiz in the quiz list and click on edit. </li>
+				<li>Then you can change the title, description, passmark of current quiz, changing the min number of questions is not recommended.</li>
+				<li>Click submit once you think everything is correct.</li>
+		</ol>
+	You should see a similar success page if your edit is successful.
+
+	<h1 id="section36">How to evaluate the task</h1>
+	To evaluate current task, you need to use this <a href="http://dblab-rack30.cs.ucr.edu/task/task_evaluation_list/">page</a>. Then perform following steps:
+		<ol type="1">
+				<li>Click task name or see evaluation to see details of current task. </li>
+				<li>The first table displays Kappa Evaluation of all the labelers that finish the task. You can view the pairwise kappa cofficient and total Krippendorff's alpha or download the result as a csv file in the name of kappa-${tasktitle}-${taskid}.csv. see example <a href="/media/kappa_test_0.csv" download="kappa_test_0.csv">here</a>.</li>
+				<img src="/media/kappa.png" alt="Algan" style="height:75%;width:75%">
+				<li>The second table displays detailed reponse of all the labelers that finish the task. You can view the response of each labeler and the majority vote or download the result as a csv file in the name of eval-${tasktitle}-${taskid}.csv. see example <a href="/media/eval_test_0.csv" download="eval_test_0.csv">here</a>.</li>
+				<img src="/media/eval.png" alt="Algan" style="height:75%;width:75%">
+		</ol>
+	<h1 id="section37">How to take the task as a labeler</h1>
+	To take the task, you need to create a task and assign it to some accounts.
+		<ul>
+				<li>If you log in as a non-admin account, you will be automatically redirect to take task page.</li>
+				<li>If you log in as a admin account, you need to either click the labeler view button on the right top of your page, or click <a href="http://dblab-rack30.cs.ucr.edu/task/task_list/">here</a>.</li>
+				<li>Taking the task is straightfoward, simply click on the task you want to take, and you can start work on the multiple choice questions.</li>
+		</ul>
+	<h1 id="section4">Contact</h1>
+	Need more information? <a href="mailto:ucipt.labeling@gmail.com"> Contact us </a>
+  </div>
+    
+
+  <div class="row">
+    <div class="col-md-12" style="text-align: center;">
+      <!--a href="{% url 'account:password_change' %}"-->
+        <!--div class="btn btn-info btn-sm">Change Password</div-->
+      <!--/a-->
+    </div>
+  </div>
+
+</div>
+<!--div class="row"> 
+    <div class="col-md-12" style="text-align: right;">
+
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucipt_logo.png' %}"></a>    
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucr_logo.png' %}"></a>
+   </div>
+</div-->
+
+</div>
+<div class="row"> 
+   <div class="col-md-12" style="text-align: right;">    
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucipt_logo.png' %}"></a> 
+    <a href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucr_logo.png' %}"></a>
+   </div>
+</div>
+{% endblock content %}

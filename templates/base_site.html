@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% load i18n static %}
+
+{% block body %}
+<body>
+
+<!-- Container -->
+<div id="container">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="navbar-header">
+            <!--a class="navbar-left" href="{% url 'home' %}"><img class="navbar-logo" src="{% static 'img/ucipt_logo.png' %}"></a-->
+            <a class="navbar-brand" href="{% url 'home' %}">  CrowdTagger              </a>
+         
+
+        </div>
+        <div class="container-fluid">
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="navbar-form navbar-right">
+                    <a href="/account/account_detail/1/"> Hello, {{ user }}               </a>		  
+                    <!--a href="/account/account_detail/1/"> About us               </a-->             
+ 
+		    <!--a href="/account/password_change"><small>Reset</small></a-->
+                    <a href="{% url 'account:logout' %}"><label class="btn btn-info">Logout</label></a>
+                    <a href="{% url 'about' %}"><label class="btn btn-info">About us</label></a>
+		   <!--select id="addlab">
+			  <option value="Admin">Admin</label></option>
+			  <option value="Labeler">Labeler</option>
+		   </select-->			   			
+		
+		    {% if  user.is_staff and request.build_absolute_uri != "http://dblab-rack30.cs.ucr.edu/task/task_list/" and request.build_absolute_uri != "http://dblab-rack30.cs.ucr.edu/task/task_empty/" %} 			  
+                    	<a href="{% url 'task:task_list' %}"><label class="btn btn-info">Labeler View</label></a>
+				
+		    {% elif user.is_staff  %}
+                        <a href="{% url 'home' %}"><label class="btn btn-info">Admin View</label></a>			
+		   {% endif %}		
+		   	
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block breadcrumbs %}
+    <div class="breadcrumbs">
+    <a href="{% url 'home' %}">{% trans 'Home' %}</a>
+    </div>
+    {% endblock %}
+
+    <!-- Content -->
+    <div id="content" class="{% block coltype %}colM{% endblock %}">
+        {% block pretitle %}{% endblock %}
+        {% block content_title %}{% endblock %}
+        {% block content %}{% endblock %}
+        {% block sidebar %}{% endblock %}
+        <br class="clear" />
+    </div>
+    <!-- END Content -->
+
+    {% block footer %}<div id="footer"></div>{% endblock %}
+</div>
+<!-- END Container -->
+</body>
+{% endblock body %}
