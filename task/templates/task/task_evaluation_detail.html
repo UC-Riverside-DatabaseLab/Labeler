@@ -1,5 +1,4 @@
 {% extends "base_site.html" %}
-
 {% load static %}
 {% load check_prerequisite %}
 
@@ -98,8 +97,8 @@
 			<tbody>
 				{% for row in array %}
 				<tr>
-				{% if forloop.counter > 10 %}
-					<!--td>...</td-->	 									
+				{% if forloop.counter > 5 %}
+					<tr><td>...</td></tr>	 									
 				{% else %}
 									
 					{% for col in row %}
@@ -109,11 +108,44 @@
 				{% endif %}
 				
 				{% endfor %}
-				<tr><td>...</td></tr>
+
+				
 			</tbody>
 			
 		</table>
-		
+		<div>
+    <input type="button" id="button_1" name="merge" value="Merge Majority Vote to database">  
+		</div>
 	</div>
+
 </div>
+<script>
+$(document).ready(function() {
+  $("#button_1").click(function(e) {
+
+    e.preventDefault();
+    var col_name = prompt("Please type in the field name(MYSQL) or dataset name(AsterixDB) you want to store the majority vote in:", "");
+    if(confirm('Begin to merge majority into original database. Click OK to continue.'))
+    {
+    $.ajax({
+      type: "POST",
+      url: "/task/merge_database/",
+      data: {
+        id:  "{{task_id}}",
+        path: "{{tablefile1}}",
+        name: col_name
+      },
+      success: function(result) {
+        alert('Transaction Complete');
+      },
+      error: function(result) {
+        alert('Connection error or duplicate field name');
+      }
+    });
+  }
+  });
+});
+</script>
+
+
 {% endblock content %}

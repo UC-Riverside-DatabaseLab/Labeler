@@ -7,13 +7,17 @@ from django.views.generic import ListView, TemplateView, FormView, DetailView, D
 from .models import Task, Participation,Document, Connection,Colname, Tablename
 from label.models import Label
 from post.models import Post
+from django.http import JsonResponse
 from response.models import PostResponse
+from django.contrib import messages
 from collections import deque
 from collections import Counter
 from .forms import CreateTaskForm
 from .forms import EditTaskForm
 from .forms import LoadDatabaseForm
+from .forms import LoadDatabaseModalForm
 from flask import Flask, request
+from django.template.loader import render_to_string, get_template
 from .forms import UpdateLabelerForm
 from nltk.metrics.agreement import AnnotationTask
 from django.http import HttpResponseRedirect, HttpResponse
@@ -23,6 +27,7 @@ import pymysql
 import csv
 import datetime
 import os
+import math
 from io import TextIOWrapper
 from django.conf import settings
 from django.views.decorators.http import require_POST
@@ -32,6 +37,8 @@ from django.db.models import Q
 import json
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, permission_required
+from django.conf import settings
+
 User = get_user_model()
 
 '''get database table data and return the result'''
@@ -129,12 +136,111 @@ def get_table_all(request):
     final_result = json.dumps(final_result)
     return HttpResponse(final_result, content_type="application/json")
 
+
+@csrf_exempt
+def merge_database(request):
+
+  user = request.user
+  if request.method == "POST" and request.is_ajax():
+    task_id = request.POST['id']
+    path = request.POST['path']
+    col_name = request.POST['name']
+
+    task = Task.objects.filter(pk=task_id)
+    post_list = list(task.values_list("post_list", flat=True))
+    post_dbid_dict = {}
+    for post_id in post_list:
+      post_obj = Post.objects.get(pk=post_id)
+      if not isinstance(post_obj.db_id, int):
+        status = "Bad id"
+        return HttpResponse(status)
+      post_dbid_dict[post_obj.content] = post_obj.db_id
+    post_label_dict = {}
+    with open(os.path.join(settings.MEDIA_ROOT, path.split('/')[2]), 'r') as csv_file:
+      reader = csv.reader(csv_file, delimiter=',', quotechar='"')
+      next(reader)
+      for r in reader:
+        post_label_dict[r[0]] = r[-1]
+    db_info = Task.objects.get(pk=task_id).connection
+    post_table = Task.objects.get(pk=task_id).table_name
+    if db_info.is_mysql:
+      conn = pymysql.connect(host=db_info.ip,
+                             port=db_info.port,
+                             user=db_info.username,
+                             password=db_info.password,
+                             db=db_info.dbname,
+                             cursorclass=pymysql.cursors.Cursor,
+                             autocommit=True
+                             )
+      try:
+        cur = conn.cursor()
+        cur.execute("ALTER TABLE " + post_table.tablename + " ADD " + col_name + " VARCHAR(255) NOT NULL")
+        for post in post_label_dict.keys():
+          label = post_label_dict[post]
+          db_id = post_dbid_dict[post]
+          cur.execute("UPDATE {} SET {}='{}' WHERE id='{}'".format(post_table.tablename,
+                                                                   col_name,
+                                                                   label,
+                                                                   str(db_id)))
+      finally:
+        cur.close()
+        conn.close()
+    else:
+      url = 'http://' + db_info.ip + ':' + str(db_info.port) + '/query/service'
+      statement = 'use ' + db_info.dbname + ';'
+      data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+      res = None
+      try:
+        res = requests.post(url, params=data_dict)
+        if res.status_code != 200:
+          res.raise_for_status()
+      except Exception as e:
+        return HttpResponse(str(e))
+      statement = "SELECT * FROM {};".format(post_table.tablename)
+      data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+      try:
+        res = requests.post(url, params=data_dict)
+        if res.status_code != 200:
+          res.raise_for_status()
+      except Exception as e:
+        return HttpResponse(str(e))
+      j_res = res.json()
+      statement = 'CREATE TYPE CrowdtaggerHelperType AS {id:int, post:string, label:string};'
+      data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+      res = requests.post(url, params=data_dict)
+      print(res.json())
+      statement = 'CREATE DATASET ' + col_name + '(CrowdtaggerHelperType) PRIMARY KEY id;'
+      data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+      res = requests.post(url, params=data_dict)
+      print(res.json())
+      insert_list = []
+      for post in post_label_dict.keys():
+        label = post_label_dict[post]
+        db_id = post_dbid_dict[post]
+        insert_dict = {}
+        insert_dict['id'] = db_id
+        insert_dict['post'] = post
+        insert_dict['label'] = label
+        insert_list.append(insert_dict)
+      statement = 'INSERT INTO {} ({});'.format(col_name, str(insert_list))
+      print(statement)
+      data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+      res = requests.post(url, params=data_dict)
+      print(res.json())
+    status = "Good"
+    return HttpResponse(status)
+  else:
+    status = "Bad"
+    return HttpResponse(status)
+
+
 '''view to delete an connection in connection list'''
 def delete_connection(request):
   connection_id = request.GET.get('id')
   object = Connection.objects.get(id=connection_id)
   object.delete()
   return redirect('/task/connection_list', permanent=True)
+
 
 
 class ConnectionListView(LoginRequiredMixin, ListView):
@@ -170,16 +276,17 @@ class ConnectionDetailModalView(LoginRequiredMixin, DetailView):
 
 class LoadDatabaseModalView(LoginRequiredMixin, FormView):
   model = Connection
-  form_class = LoadDatabaseForm
+  error = {}
+  form_class = LoadDatabaseModalForm
   template_name = 'task/load_database_modal.html'
-  success_url = '/task/load_database_success'
-  fail_url = '/task/load_database_fail'
+  success_url = '/task/load_database_success_modal'
+  fail_url = '/task/load_database_fail_modal'
 
-
-  def form_invalid(self, form):
-    return render(request, self.fail_url)
+  def form_notvalid(self, form):
+    return JsonResponse(self.error)
 
   def form_valid(self, form):
+    self.error = {'message': 'Successfully added the database!'}
     username = form.cleaned_data['Mysql Username']
     ip = form.cleaned_data['Mysql Host Address']
     dbname = form.cleaned_data['Mysql Database Name']
@@ -189,14 +296,17 @@ class LoadDatabaseModalView(LoginRequiredMixin, FormView):
     a_dbname = form.cleaned_data['AsterixDB Database Name']
     a_port = form.cleaned_data['AsterixDB Port Number']
     if a_ip != '':
-      db = form.load_database_A(a_ip, a_dbname, a_port, self.request.user)
+        error, db = form.load_database_A(a_ip, a_dbname, a_port, self.request.user)
     elif ip != '':
-      db = form.load_database(username, ip, password, dbname, port, self.request.user)
+        error, db = form.load_database(username, ip, password, dbname, port, self.request.user)
     else:
       db = None
+      self.error = {'error': 'Empty IP found!'}
     if not db:
-      return self.form_invalid(form)
-    return super(LoadDatabaseModalView, self).form_valid(form)
+      if error:
+        self.error = error
+      return self.form_notvalid(form)
+    return JsonResponse(self.error)
 
 
 class LoadDatabaseSuccessModalView(LoginRequiredMixin, TemplateView):
@@ -267,7 +377,7 @@ class TakeTaskView(LoginRequiredMixin, TemplateView):
       temp = get_list_or_404(self.task.post_list.filter(~Q(id__in=post_response_ids)))      
       l1 = list(self.task.post_list.all().filter(task=self.task.pk).values_list('id', flat=True))
       l2 = list(post_response_ids)
-      diff_list = [item for item in l1 if not item in l2]
+      diff_list = [item for item in l1 if item not in l2]
       for responded_post in diff_list:
         responder_ids = list(PostResponse.objects.filter(task=self.task.pk, post=responded_post).values_list('responder__id', flat=True).distinct())
         lnt = len(responder_ids)
@@ -315,7 +425,6 @@ class LoadDatabaseView(LoginRequiredMixin, FormView):
   fail_template = 'task/load_database_fail.html'
 
   def form_notvalid(self, form):
-    print(self.error)
     return render(self.request, self.fail_template, self.error)
 
   def form_valid(self, form):
@@ -378,10 +487,17 @@ class CreateTaskView(LoginRequiredMixin, FormView):
     participating_coders = form.cleaned_data['Participating Labelers']
     labels = form.cleaned_data['label']
     prerequisite = form.cleaned_data['Choose Quiz']
-    readerR = csv.reader(TextIOWrapper(task_upload_file, errors='ignore'), delimiter='|', skipinitialspace=True)
-    labels = next(readerR)
-    posts = list(readerR)
-    task_upload_file.seek(0)
+    if task_upload_file:
+      readerR = csv.reader(TextIOWrapper(task_upload_file, errors='ignore'), delimiter='|', skipinitialspace=True)
+      labels = next(readerR)
+      posts = list(readerR)
+      task_upload_file.seek(0)
+      count = form.cleaned_data['count']
+      min_lp = form.cleaned_data['min_lp']
+      min_pl = form.cleaned_data['min_pl']
+      len_coder = form.cleaned_data['len_coder']
+      if count * min_lp > min_pl * len_coder:
+        messages.warning(self.request, 'Warning: Please include at least ' + str(math.ceil(count * min_lp/min_pl)) + ' minimum labelers to satisfy the requirement')
     if 'Preview' in self.request.POST:
       context = {
           "task_title": task_title or"N/A",
@@ -528,7 +644,8 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
   template_name = 'task/task_evaluation_detail.html'
 
   def dispatch(self, request, *args, **kwargs):
-    self.task = get_object_or_404(Task, pk=self.kwargs['pk'])
+    self.task_id = self.kwargs['pk']
+    self.task = get_object_or_404(Task, pk=self.task_id )
     self.array = []
     self.kappa = []
     self.kappa1 = []
@@ -589,7 +706,7 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
             voteList[n] += 1
           else:
             voteList[n] = 1
-          if voteList[n] > maximum[1]:
+          if voteList[n] > maximum[1] and n != 'N/A':
              maximum = (n, voteList[n])
       else:
         self.coder_emails_temp = self.coder_emails
@@ -598,22 +715,21 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
       i = 0
       for coder_email in self.coder_emails_temp:
         if len(self.coder_emails) > 5 and coder_email == "(List continues...)":
-           label = '...'
+          label = '...'
         else:
-           label = 'N/A'
-           try:
-             post_response = PostResponse.objects.filter(task=self.task.pk, post=post.pk, responder__email=coder_email).last()
-             label = post_response.label
-             if len(self.coder_emails) <= 5:
-                filepp.write(str(label))
-                filepp.write(',')
-             listTemp.append(str(label))
-           except:
-             if len(self.coder_emails) <= 5:
-                filepp.write('N/A')
-                filepp.write(',')
-             listTemp.append(str(label))
-             pass
+          label = 'N/A'
+          try:
+            post_response = PostResponse.objects.filter(task=self.task.pk, post=post.pk, responder__email=coder_email).last()
+            label = post_response.label
+            if len(self.coder_emails) <= 5:
+              filepp.write(str(label))
+              filepp.write(',')
+            listTemp.append(str(label))
+          except:
+            if len(self.coder_emails) <= 5:
+              filepp.write('N/A')
+              filepp.write(',')
+            listTemp.append(str(label))
         row.append(label)
       maximum = ('', 0)
       for n in listTemp:
@@ -621,18 +737,10 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
           voteList[n] += 1
         else:
           voteList[n] = 1
-        if voteList[n] > maximum[1]:
+        if voteList[n] > maximum[1] and n != 'N/A':
           maximum = (n, voteList[n])
       filepp.write(maximum[0])
       filepp.write('\n')
-      maximum = ('', 0)
-      for n in listTemp:
-        if n in voteList:
-          voteList[n] += 1
-        else:
-          voteList[n] = 1
-        if voteList[n] > maximum[1]:
-          maximum = (n, voteList[n])
       row.append(maximum[0])
       self.array.append(row)
     try:
@@ -804,6 +912,7 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
   def get_context_data(self, **kwargs):
     context = super(TaskEvaluationDetailView, self).get_context_data(**kwargs)
     context['task'] = self.task
+    context['task_id'] = self.task_id
     context['array'] = self.array
     context['coder_email_list'] = self.coder_emails_temp
     context['alpha'] = self.alpha

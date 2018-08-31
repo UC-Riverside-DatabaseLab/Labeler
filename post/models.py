@@ -7,7 +7,7 @@ class Post(models.Model):
     verbose_name = 'post'
     verbose_name_plural = 'posts'
 
-  db_id = models.IntegerField(default=None, blank=False, verbose_name='db_id')
+  db_id = models.IntegerField(null=True, blank=True, verbose_name='db_id')
   content = models.CharField(
     max_length=1000,
     blank=False,
@@ -30,7 +30,7 @@ class Post1(models.Model):
     verbose_name = 'post1'
     verbose_name_plural = 'posts1'
 
-  db_id = models.IntegerField(default=None, blank=False, verbose_name='db_id')
+  db_id = models.IntegerField(null=True, blank=True, verbose_name='db_id')
   content = models.CharField(
           max_length=1000,
           blank=False,

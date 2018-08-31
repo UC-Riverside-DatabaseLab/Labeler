@@ -1,9 +1,10 @@
-tabase: {{connection.dbname}}</h1>
+<script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
+<h1>database: {{connection.dbname}}</h1>
 <div id="table_content">
 </div>
 <script>
 function goBack() {
-    window.history.back()
+    window.history.back();
 }
 $(document).ready(function(){
   $.post('/task/create_task/get_table_all/',

@@ -16,23 +16,20 @@ import os
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
 
-# Uncomment following if you want to run direct server.
-# STATIC_DIR = os.path.join(BASE_DIR, 'static')
+STATIC_DIR = os.path.join(BASE_DIR, 'static')
+
 # MEDIA_DIR = os.path.join(BASE_DIR, 'media')
-
-# Path to store all the media files.
-MEDIA_DIR = 'your path'
-
-# Path to store all the static files.
-STATIC_DIR = 'your path'
+MEDIA_DIR = '/var/www/media'
+STATIC_ROOT = '/var/www/static'
+MEDIA_ROOT = '/var/www/media'
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'your key'
+SECRET_KEY = '9co-1+0ylsk61@ex8&+c=9*9s59n7!*#jlcr_cg&bhmcgb$xy!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-# Allowed from all host
 ALLOWED_HOSTS = ['*']
 
 AUTH_USER_MODEL = 'cuser.CUser'
@@ -43,7 +40,7 @@ CRISPY_TEMPLATE_PACK = 'bootstrap3'
 # Application definition
 
 INSTALLED_APPS = [
-    'admin_view_permission',
+    'admin_view_permission', #https://media.readthedocs.org/pdf/django-admin-view-permission/latest/django-admin-view-permission.pdf
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -103,9 +100,9 @@ WSGI_APPLICATION = 'labelingsystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'your database name',
-        'USER': 'your user name',
-        'PASSWORD': 'your password',
+        'NAME': 'postgres',
+        'USER': 'postgres',
+        'PASSWORD': 'postgres',
         'HOST': 'localhost',
         'PORT': '5432',
     }
@@ -147,25 +144,27 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
+
 STATIC_URL = '/static/'
-STATIC_ROOT = STATIC_DIR
-FORCE_SCRIPT_NAME = ''
+STATICFILES_DIRS =[STATIC_DIR]
+
 # Media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = MEDIA_DIR
-# Login
 LOGIN_URL = 'account:login'
 LOGIN_REDIRECT_URL = 'home'
-# Logout
+#LOGIN_REDIRECT_URL = 'login_success'
+
 LOGOUT_REDIRECT_URL = 'account:login'
+
 # Emails
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = 'your user name'
-EMAIL_HOST_PASSWORD = 'your password'
-EMAIL_FROM = 'your from email address'
-EMAIL_TO = 'your to email address'
+EMAIL_HOST_USER = 'ucipt.labeling@gmail.com'
+EMAIL_HOST_PASSWORD = 'UCIPT2017'
+EMAIL_FROM = 'zhang8870@gmail.com'
+EMAIL_TO = 'vagelish@gmail.com '
 # This will print emails to STDOUT (use for testing)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 

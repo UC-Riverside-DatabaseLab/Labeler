@@ -9,7 +9,9 @@ from crispy_forms.bootstrap import FieldWithButtons, StrictButton
 from django.forms.fields import ChoiceField
 from itertools import chain
 from django.conf import settings
+from django.http import JsonResponse
 import random
+import math
 import string
 import hashlib
 import pymysql
@@ -84,19 +86,19 @@ class LoadDatabaseForm(forms.Form):
       HTML("""
           <script>$(function()
           {
-              $('input[name=post-format]').on('click init-post-format', function() {
-                  $('#gallery-box').toggle($('#post-format-gallery').prop('checked'));
+              $('input[name=post-format-load]').on('click init-post-format', function() {
+                  $('#gallery-box3').toggle($('#post-format-gallery-load').prop('checked'));
               }).trigger('init-post-format');
-                   $('input[name=post-format]').on('click init-post-format', function() {
-                  $('#gallery-box1').toggle($('#post-format-gallery1').prop('checked'));
+                   $('input[name=post-format-load]').on('click init-post-format', function() {
+                  $('#gallery-box4').toggle($('#post-format-gallery-load1').prop('checked'));
               }).trigger('init-post-format');
 
           });
           </script>
           """),
       HTML("""
-          <label><input type="radio" name="post-format" id="post-format-gallery">Load from Mysql</label><div></div>
-          <div id="gallery-box">
+          <label><input type="radio" name="post-format-load" id="post-format-gallery-load">Load from Mysql</label><div></div>
+          <div id="gallery-box3">
           """),
       Field('Mysql Username', placeholder="Enter the username"),
       Field('Mysql Host Address', placeholder="Enter the ip address of the host"),
@@ -104,29 +106,20 @@ class LoadDatabaseForm(forms.Form):
       Field('Mysql Database Name', placeholder="Enter the name of the database"),
       Field('Mysql Port Number', placeholder="Enter the port of the database, default: 3306"),
       HTML("""</div><div>"""),
-      HTML("""<label><input type="radio" name="post-format" id="post-format-gallery1">Load from AsterixDB</label>
-          </div><div id="gallery-box1">
+      HTML("""<label><input type="radio" name="post-format-load" id="post-format-gallery-load1">Load from AsterixDB</label>
+          </div><div id="gallery-box4">
           """),
       Field('AsterixDB Host Address', placeholder="Enter the ip address of the host"),
       Field('AsterixDB Database Name', placeholder="Enter the name of the database"),
       Field('AsterixDB Port Number', placeholder="Enter the port of the database, default: 19002"),
       HTML("""</div><div>"""),
       HTML("""<button type="button" onclick="window.open('', '_self', ''); window.close();">Close</button>"""))
-    self.helper.add_input(Submit('load_database_submit', 'Submit', css_class='btn btn-info btn-sm pull-right'))
+    # self.helper.add_input(Submit('load_database_submit', 'Submit', css_class='btn btn-info btn-sm pull-right'))
 
   def clean(self):
     cleaned_data = super(LoadDatabaseForm, self).clean()
-
     if not ((cleaned_data.get('Mysql Username') and cleaned_data.get('Mysql Host Address') and cleaned_data.get('Mysql Password') and cleaned_data.get('Mysql Database Name') and cleaned_data.get('Mysql Port Number')) or (cleaned_data.get('AsterixDB Host Address') and cleaned_data.get('AsterixDB Database Name') and cleaned_data.get('AsterixDB Port Number'))):
       raise forms.ValidationError('Must either load form Mysql or AsterixDB')
-    try:
-      if cleaned_data.get('Mysql Host Address'):
-        print(cleaned_data.get('Mysql Host Address'))
-        ipaddress.ip_address(cleaned_data.get('Mysql Host Address'))
-      if cleaned_data.get('AsterixDB Host Address'):
-        ipaddress.ip_address(cleaned_data.get('AsterixDB Host Address'))
-    except:
-      raise forms.ValidationError('Wrong IP format!')
     return cleaned_data
 
   def load_database(self, c_username, c_ip, c_password, c_dbname, c_port, user):
@@ -178,12 +171,16 @@ class LoadDatabaseForm(forms.Form):
     url = 'http://' + c_ip + ':' + str(c_port) + '/query/service'
     statement = 'use ' + c_dbname + ';'
     data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+    res = None
     try:
       res = requests.post(url, params=data_dict)
       if res.status_code != 200:
         res.raise_for_status()
     except Exception as e:
-      return {'error': str(e)}, None
+      if res and res.status_code != 200:
+        return {'error': str(e), 'code': res.status_code}, None
+      else:
+        return {'error': str(e)}, None
     db_obj = Connection.objects.create(
                                       creator=user,
                                       port=c_port,
@@ -206,17 +203,92 @@ class LoadDatabaseForm(forms.Form):
           col_res = requests.post(url, params=data_dict)
           if res.status_code == 200:
             j_col_res = col_res.json()
-            for col_name in j_col_res['results'][0].keys():
-              col_obj = Colname.objects.create(creator=user, colname=col_name, tablename=table_obj)
-              col_obj.save()
+            if len(j_col_res['results']) > 0:
+              for col_name in j_col_res['results'][0].keys():
+                col_obj = Colname.objects.create(creator=user, colname=col_name, tablename=table_obj)
+                col_obj.save()
           else:
-            j_res.raise_for_status()
+            col_res.raise_for_status()
       else:
         res.raise_for_status()
     except Exception as e:
-      return {'error': str(e)}, None
+      if res and res.status_code != 200:
+        return {'error': str(e), 'code': res.status_code}, None
+      elif col_res and col_res.status_code != 200:
+        return {'error': str(e), 'code': col_res.status_code}, None
+      else:
+        return {'error': str(e)}, None
     db_obj.save()
-    return None, b_obj
+    return None, db_obj
+
+class LoadDatabaseModalForm(LoadDatabaseForm):
+  def __init__(self, *args, **kwargs):
+    super(LoadDatabaseModalForm, self).__init__(*args, **kwargs)
+    self.helper.form_id = 'load_database_form_modal'
+    self.helper.form_method = 'POST'
+    self.helper.form_action = '/task/load_database_modal/'
+    self.helper.layout = Layout(
+      HTML("""
+          <script>
+          function IsJsonString(str) {
+              try {
+                  JSON.parse(str);
+              } catch (e) {
+                  return false;
+              }
+              return true;
+          }
+          $('#load_database_form_modal').submit(function(e){
+            $('.error').html('please wait...')
+             $.ajax({
+                  type: 'POST',
+                  url: '/task/load_database_modal/',
+                  data: $('#load_database_form_modal').serialize(),
+                  success: function (data) {
+                      var jstring = JSON.stringify(data, undefined, 1).replace(/[{}]/g, '');
+                      if (jstring.includes('Must either load form Mysql or AsterixDB')){
+                        $('.error').html('Must either load form Mysql or AsterixDB');
+                      }
+                      else{
+                        $('.error').html(jstring);
+                      }
+                  },
+                  error: function(data) {
+                      $('.error').html('Must either load form Mysql or AsterixDB');
+                  }
+              });
+              e.preventDefault();
+          });
+          $(function()
+              {
+              $('input[name=post-format-load]').on('click init-post-format', function() {
+                  $('#gallery-box3').toggle($('#post-format-gallery-load').prop('checked'));
+              }).trigger('init-post-format');
+                   $('input[name=post-format-load]').on('click init-post-format', function() {
+                  $('#gallery-box4').toggle($('#post-format-gallery-load1').prop('checked'));
+              }).trigger('init-post-format');
+              });
+
+          </script>
+          """),
+      HTML("""
+          <label><input type="radio" name="post-format-load" id="post-format-gallery-load">Load from Mysql</label><div></div>
+          <div id="gallery-box3">
+          """),
+      Field('Mysql Username', placeholder="Enter the username"),
+      Field('Mysql Host Address', placeholder="Enter the ip address of the host"),
+      Field('Mysql Password', placeholder="Enter the password"),
+      Field('Mysql Database Name', placeholder="Enter the name of the database"),
+      Field('Mysql Port Number', placeholder="Enter the port of the database, default: 3306"),
+      HTML("""</div><div>"""),
+      HTML("""<label><input type="radio" name="post-format-load" id="post-format-gallery-load1">Load from AsterixDB</label>
+          </div><div id="gallery-box4">
+          """),
+      Field('AsterixDB Host Address', placeholder="Enter the ip address of the host"),
+      Field('AsterixDB Database Name', placeholder="Enter the name of the database"),
+      Field('AsterixDB Port Number', placeholder="Enter the port of the database, default: 19002"),
+      HTML("""</div><div>"""),
+      )
 
 '''main form to create the task'''
 class CreateTaskForm(forms.Form):
@@ -432,9 +504,9 @@ class CreateTaskForm(forms.Form):
                 });
               });
             });
-            function removefunc() {
-              $(".modal-backdrop").remove();
-              window.location.reload();
+            function change_modal_connection() {
+              eModal.ajax("/task/connection_list_modal", 'Connection List');
+              eModal.setId('main_list');
             }
             </script>
             """),
@@ -458,23 +530,8 @@ class CreateTaskForm(forms.Form):
       HTML("""<script> function popupfunc_a() {window.open("http://dblab-rack30.cs.ucr.edu/task/connection_list","popup_page","status=1,height:500,width:600,toolbar=0,resizeable=0") } </script>"""),
       HTML("""<p style="color:blue">i.Connect to Database:</p>"""),
       HTML("""<p>You may connect to database <a href='#' onclick="popupfunc()">here</a> if you haven't created one.</p>"""),
-      HTML("""<p>Or manage your database instances <a href='#' onclick="popupfunc_a()">here(popup)</a> or<a class="fa fa-pencil" data-toggle="modal" href="/task/connection_list_modal" data-backdrop="static" data-keyboard="false" data-target="#myModal" data-remote="false" >here(modal).</a></p></p>"""),
-      HTML("""
-          <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <button type="button" class="close" onclick = "removefunc()" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 class="modal-title" id="myModalLabel">Connections</h4>
-                </div>
-                <div class="modal-body"></div>
-                <div class="modal-footer">
-                  <button type="button" onclick = "removefunc()" class="btn btn-default" data-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
-          """),
+      HTML("""<p>Or manage your database instances <a href='#' onclick="popupfunc_a()">here(popup)</a> or <a href="javascript:void(0);" onclick="change_modal_connection();">here(modal).</a></p></p>"""),
+
       HTML("""<p style="color:blue">ii.Select Your Posts:</p>"""),
       Field('connection', css_class='col-md-4'),
       Field('tablename_post', css_class='col-md-4'),
@@ -517,12 +574,20 @@ class CreateTaskForm(forms.Form):
       count = len(lines) - 1
       for line in lines[1:]:
         if len(line) > 1000:
-          raise forms.ValidationError('Post too long: '+str(line))
+          raise forms.ValidationError('Post too long: ' + str(line))
+      len_coder = len(cleaned_data.get('Participating Labelers').split('\n'))
+      min_pl = cleaned_data.get('Min number of posts that a labeler should complete')
+      min_lp = cleaned_data.get('Min number of labelers per post')
+      cleaned_data['count'] = count
+      cleaned_data['min_lp'] = min_lp
+      cleaned_data['min_pl'] = min_pl
+      cleaned_data['len_coder'] = len_coder
+      cleaned_data.get('upload').seek(0)
       if count < cleaned_data.get('Min number of posts that a labeler should complete'):
-        raise forms.ValidationError('Must satisfy min number of posts')
-    cleaned_data.get('upload').seek(0)
+        raise forms.ValidationError('Number of posts not enough!')
     if len(cleaned_data.get('Participating Labelers').split('\n')) < cleaned_data.get('Min number of labelers per post'):
-      raise forms.ValidationError('Must satisfy min number of labelers')
+      raise forms.ValidationError('Participating Labelers not enough!')
+
     if Task.objects.filter(title=cleaned_data['Task Title'], creator=self.user.pk).count() > 0:
       raise forms.ValidationError("Existing title found, please use a different task name.")
     return cleaned_data
@@ -591,11 +656,12 @@ class CreateTaskForm(forms.Form):
                                     num_posts=task_num_posts,
                                     num_labelers=task_num_labelers,
                                     random_label=task_random_label,
+                                    connection=db_info,
+                                    table_name=post_name,
                                     creator=user,
                                     prerequisite=prerequisite,
                                     upload_task=task_upload_file
                                     )
-      task_obj.save()
       self.id = task_obj.id
       list2_shuf_temp = []
       ctr = 0
@@ -609,7 +675,7 @@ class CreateTaskForm(forms.Form):
         index_shuf = range(ctr)
         index_shuf1 = [i for i in range(ctr)]
         random.shuffle(index_shuf1)
-        for i in index_shuf1: 
+        for i in index_shuf1:
             temp = list2_shuf_temp[i]
             list2_shuf.append(temp)
         list1_shuf = labelsF
@@ -621,13 +687,19 @@ class CreateTaskForm(forms.Form):
         label_object = Label.objects.create(content=label)
         task_obj.label_list.add(label_object)
       for post in list2_shuf:
-        post_object = Post.objects.create(
-                                         content=post,
-                                         author=user
-                                         )
         if has_id:
-          post_object.db_id = int(post_dict.get(post))
+          post_object = Post.objects.create(
+                                         content=post,
+                                         author=user,
+                                         db_id=int(post_dict.get(post)),
+                                         )
+        else:
+          post_object = Post.objects.create(
+                                         content=post,
+                                         author=user,
+                                         )
         task_obj.post_list.add(post_object)
+        task_obj.save()
     except:
       return None
 
@@ -671,7 +743,7 @@ class CreateTaskForm(forms.Form):
   def add_participant(self, task, coder):
     Participation.objects.create(
                                 task=task,
-                                labeler=coder
+                                labeler=coder,
                                 )
 
   def send_email(self, task):
@@ -679,7 +751,7 @@ class CreateTaskForm(forms.Form):
     coder_list = participating_coders.split()
     print (coder_list)
     coder_l = []
-    for coderP in coder_list:
+    for index, coderP in enumerate(coder_list):
       self.add_participant(task, coderP)
       coder_l.append(coderP)
       coder_l = []
@@ -840,6 +912,7 @@ class UpdateLabelerForm(forms.Form):
       kwargs.update(initial=updated_initial)
     super(UpdateLabelerForm, self).__init__(*args, **kwargs)
     self.fields['extra_field_count'] = forms.IntegerField(required=False)
+    self.fields['extra_field_count'].widget = forms.HiddenInput()
     self.fields['extra_field_count'].widget.attrs.update({'id': 'extra_field_count'})
     print(extra_fields)
     labeler_fields = []
@@ -853,12 +926,14 @@ class UpdateLabelerForm(forms.Form):
         self.fields['labeler_{index}'.format(index=index)].widget.attrs.update({'id': 'labeler_{index}'.format(index=index)})
     self.fields['Select Task'] = forms.CharField(required=False)
     self.fields['Select Task'].widget.attrs['readonly'] = True
-    self.fields['Detele responses when removing labelers'] = forms.BooleanField(initial = False, help_text='Caution: if a user is removed, this will delete all his responses', required=False)
+    self.fields['Detele responses when removing labelers'] = forms.BooleanField(initial = False, help_text='Caution: When chosen, if a user is removed, it will delete all his responses', required=False)
     self.fields['Detele responses when removing labelers'].widget.attrs.update({'id': 'delete_response'})
     self.fields['ID'] = forms.CharField(required=False)
     self.fields['ID'].widget = forms.HiddenInput()
     self.fields['Participating Labelers'] = forms.CharField(widget=forms.Textarea, required=False)
+    self.fields['Participating Labelers'].widget = forms.HiddenInput()
     self.fields['Participating Labelers'].widget.attrs.update({'id': 'all_labelers'})
+    
     self.helper = FormHelper()
     self.helper.form_id = 'update_labeler_form'
     self.helper.form_method = 'POST'

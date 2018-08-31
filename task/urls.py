@@ -31,8 +31,7 @@ urlpatterns = [
   url(r'^connection_list_modal/delete_connection_modal/$', delete_connection_modal, name='delete_connection_modal'),
   url(r'^connection_list_modal/(?P<pk>\d+)/$', ConnectionDetailModalView.as_view(), name='connection_detail_modal'),
   url(r'^load_database_modal/$', LoadDatabaseModalView.as_view(), name='load_database_modal'),
-  url(r'^load_database_success_modal/$', LoadDatabaseSuccessModalView.as_view(), name='load_database_success_modal'),
-  url(r'^load_database_fail_modal/$', LoadDatabaseFailModalView.as_view(), name='load_database_fail_modal'),
+  url(r'^merge_database/$', merge_database, name='merge_database'),
 ]
 
 

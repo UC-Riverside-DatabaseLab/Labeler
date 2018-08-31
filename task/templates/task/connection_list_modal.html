@@ -1,48 +1,84 @@
+<script src="//rawgit.com/saribe/eModal/master/dist/eModal.min.js"></script>
 <script>
-      $("#modal").on("show.bs.modal", function(e) {
-        $(".modal-backdrop").remove();
-        var link = $(e.relatedTarget);
-	if(link.attr("href") == "/task/load_database_modal") {
-		$('#myModal').find(".modal-title").text("load database").end();
-	}
-	else {
-		$('#myModal').find(".modal-title").text("tables").end();
-	}
-	$('#myModal').find(".modal-footer").html('<button type="button" onclick = "returnfunc();" class="btn btn-default">Return</button>').end();
-        $(this).find(".modal-body").load(link.attr("href")).end();
-	
-      });
-function returnfunc() {
-	$('#myModal').find(".modal-footer").html("<button type='button' onclick = 'removefunc()' class='btn btn-default' data-dismiss='modal'>Close</button>").end();
-	$('#myModal').find(".modal-title").text("connections").end();
-	$('#myModal').find(".modal-body").load("/task/connection_list_modal").end();
-	$('#modal').modal('hide');
-	$('body').removeClass('modal-open');
- }
-function removefunc() {
-$(".modal-backdrop").remove(); 
-window.location.reload();
+function return_to_main() {
+  eModal.ajax("/task/connection_list_modal", 'Connection List');
+  eModal.setId('main_list');
+}
+function change_modal_load() {
+  $("#main_list .close").click();
+  var options = {
+        url: "/task/load_database_modal",
+        title:'Load Database',
+        buttons: [
+            {text: 'close', style: 'danger',   close: true, click: return_to_main },
+            {text: 'submit', style: 'info',   close: false, click: submit_form }
+        ],
+    };
+  eModal.ajax(options);
+}
+function IsJsonString(str) {
+  try {
+      JSON.parse(str);
+  } catch (e) {
+      return false;
+  }
+  return true;
 }
 
+function submit_form() {
+  var title = "Server Message";
+  $('#load_database_form_modal').submit(function(e){
+$('.error').html('please wait...')
+ $.ajax({
+      type: 'POST',
+      url: '/task/load_database_modal/',
+      data: $('#load_database_form_modal').serialize(),
+      success: function (data) {
+
+          var jstring = JSON.stringify(data, undefined, 1).replace(/[{}]/g, '');
+          console.log(jstring);
+          if (jstring.includes('Must either load form Mysql or AsterixDB')){
+            var options = {
+                message: 'Must either load form Mysql or AsterixDB',
+                title:title,
+            };
+            eModal.alert(options);
+          }
+          else{
+            var options = {
+                message: jstring,
+                title:title,
+            };
+            eModal.alert(options);
+          }
+      },
+      error: function(data) {
+            var jstring = JSON.stringify(data, undefined, 1).replace(/[{}]/g, '');
+            var options = {
+                message: jstring,
+                title:title,
+            };
+            eModal.alert(options);
+      }
+  });
+  e.preventDefault();
+});
+  $('#load_database_form_modal').submit();
+}
+
+function change_modal_detail(link) {
+
+  eModal.ajax(link, 'Load Database', 'Table Detail');
+}
 </script>
-<div class="modal" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-body"></div>
-      <div class="modal-footer">
-        <button type="button" onclick = "removefunc()" class="btn btn-default" data-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
   <h1>Connection List</h1>
 
     {% if connection_list %}
+    <p>Create new database connection <a href="javascript:void(0);" onclick="change_modal_load();">here</a>.</p>
 	<h2>Mysql:</h2>
-<p>Create new database connection <a data-toggle="modal" href = "/task/load_database_modal" data-target="#modal" data-remote="false" data-backdrop="static" data-keyboard="false">here</a>.</p>
 <table>
   <tr>
-    <tih>connection</th>
+    <th>connection</th>
     <th>username</th>
     <th>ip</th>
     <th>database name</th>
@@ -52,7 +88,7 @@ window.location.reload();
       {% for connection in connection_list %}
 	{% if connection.is_mysql %}
   <tr>
-    <td><a data-toggle="modal" href = "/task/connection_list_modal/{{connection.id}}" data-target="#modal" data-remote="false" data-backdrop="static" data-keyboard="false">{{ connection }}</a></td>
+    <td><a href="javascript:void(0);" onclick="change_modal_detail('/task/connection_list_modal/{{connection.id}}');">{{ connection }}</a></td>
     <td>{{ connection.username }}</td>
     <td>{{ connection.ip }}</td>
     <td>{{ connection.dbname }}</td>
@@ -76,7 +112,7 @@ window.location.reload();
 	{% if not connection.is_mysql %}
   <tr>
 </form></td>
-    <td><a data-toggle="modal" href = "/task/connection_list_modal/{{connection.id}}" data-target="#modal" data-remote="false"  data-backdrop="static" data-keyboard="false">{{ connection }}</a></td>
+    <td><a href="javascript:void(0);" onclick="change_modal_detail('/task/connection_list_modal/{{connection.id}}');">{{ connection }}</a></td>
     <td>{{ connection.ip }}</td>
     <td>{{ connection.dbname }}</td>
     <td>{{ connection.port }}</td>
@@ -87,6 +123,6 @@ window.location.reload();
 </table>
 
     {% else %}
-      <p>There is no connection.But you can create new database connection <a data-toggle="modal" href = "/task/load_database_modal" data-target="#modal" data-remote="false" data-backdrop="static" data-keyboard="false">here</a>.</p>
+      <p>There is no connection.But you can create new database connection <a href="javascript:void(0);" onclick="change_modal_load();">here</a>.</p>
     {% endif %}  
 <br></br>
