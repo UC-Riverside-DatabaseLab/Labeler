@@ -38,7 +38,7 @@ class Classify(models.Model):
     default="cnn")
 
   conf = models.CharField(
-    max_length = 1000,
+    max_length = 5000,
     verbose_name = 'configuration',
     blank = False)
 

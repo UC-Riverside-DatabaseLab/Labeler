@@ -37,7 +37,6 @@ from django.db.models import Q
 import json
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required, permission_required
-from django.conf import settings
 
 User = get_user_model()
 
@@ -656,7 +655,7 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
     self.head = []
     self.coder_emails = PostResponse.objects.filter(task=self.task.pk).values_list('responder__email', flat=True).distinct().order_by('responder__email')
     post_list = self.task.post_list.all()
-    media_root = '/var/www/media/'
+    media_root = settings.MEDIA_ROOT
     kappa_path = media_root + 'kappa_' + str(self.task.title) + "_" + str(self.task.pk) + '.csv'
     eval_path = media_root + 'eval_' + str(self.task.title) + "_" + str(self.task.pk) + '.csv'
     if os.path.exists(kappa_path):

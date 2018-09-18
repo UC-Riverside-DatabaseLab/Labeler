@@ -1,0 +1,113 @@
+{% extends "base_site.html" %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+
+&rsaquo; Create Classification Model Success
+</div>
+{% endblock breadcrumbs %}
+
+{% block content %}
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-12">
+			<h1>Hi, {{ request.user }}! Here is your classification report:</h1>
+			{% if error %}
+      <b>ERROR</b>: {{error}}
+      <br>
+      {% endif %}
+      {% if predictions%}
+      <h2>PREDICTION RESULTS:</h2>
+      <table>
+        <tr>
+          <th>posts</th>
+          <th>prediction label</th>
+        </tr>
+        {% for list1item in data|slice:":5" %}
+           {% for list2item in predictions|slice:":5" %}
+              {% if forloop.counter == forloop.parentloop.counter %}
+                  <tr>
+                    <td>{{list1item}}</td>
+                    <td>{{list2item}}</td>
+                  </tr>
+              {% endif %}
+           {% endfor %}  
+        {% if forloop.counter == 5 %}
+          <tr>
+            <td>...</td>
+            <td>...</td>
+          </tr>
+        {% endif %}           
+        {% endfor %}
+      </table>
+      <br>
+      <h1>Prediction Details</h1><h2><a href={{path}}>[download table as a file]</a></h2>
+      {% endif %}
+      {% if accuracy%}
+      <h2>ACCURACY: &nbsp {{accuracy}}</h2>
+      <br>
+      <h2>WEIGHTED ACCURACY: &nbsp {{weighted_accuracy}}</h2>
+      <br>
+      {% endif %}
+      {% if confusion_matrix%}
+      <h2>CONFUSION MATRIX:</h2>
+      <table>
+        <tr>
+            <td></td>
+            {% for list1item in labels|slice:":5" %}
+            <td>{{list1item}}</td>
+            {% endfor %}
+        </tr>
+
+        {% for list1item in labels|slice:":5" %}
+        <tr>
+            <td>{{list1item}}</td>
+            {% for list1item1 in labels|slice:":5" %}
+            {% for key, value in confusion_matrix.items %}
+                {% if list1item == key %}
+                    {% for key1, value1 in value.items %}
+                      {% if list1item1 == key1 %}
+                        <td>{{value1}}</td>
+                      {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+    <h1>Confusion Matrix Details</h1><h2><a href={{path}}>[download table as a file]</a></h2>
+      <br>
+      {% endif %}
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12" style="text-align: center;">
+			<a href="{% url 'home' %}">
+				<div class="btn btn-info btn-lg start_quiz">Return</div>
+			</a>
+		</div>
+	</div>
+
+</div>
+{% endblock content %}

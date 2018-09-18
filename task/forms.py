@@ -594,114 +594,111 @@ class CreateTaskForm(forms.Form):
 
   def create_task(self, task_title, task_description, user, prerequisite, task_num_labelers, task_num_posts, task_random_label, task_upload_file, db_info, post_name,post_col_name, labels):
     has_id = False
-    try:
-      if task_upload_file is not None:
-        readerR = csv.reader(TextIOWrapper(task_upload_file, errors='ignore'), delimiter='|', skipinitialspace=True)
-        labelsF = next(readerR)
-        posts = readerR
-      elif db_info is not None and post_name is not None and post_col_name is not None and labels is not None:
-        if db_info.is_mysql:
-          conn = pymysql.connect(host=db_info.ip,
-                                port=db_info.port,
-                                user=db_info.username,
-                                password=db_info.password,
-                                db=db_info.dbname,
-                                cursorclass=pymysql.cursors.Cursor
-                                )
-          post_dict = {}
-          try:
-            cur = conn.cursor()
-            cur.execute("SELECT " + post_col_name.colname + " FROM " + post_name.tablename + " LIMIT 10000")
-            posts = list(cur.fetchall())
-            labelsF = labels.strip().split(';')
-            print(labelsF)
-            cur.execute("SELECT id FROM " + post_name.tablename + " LIMIT 10000")
-            ids = list(cur.fetchall())
-            has_id = True
-          finally:
-            cur.close()
-            conn.close()
-        else:
-          url = 'http://' + db_info.ip + ':' + str(db_info.port) + '/query/service'
-          statement = 'use ' + db_info.dbname + ';'
-          data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
-          try:
-            res = requests.post(url, params=data_dict)
-            if res.status_code != 200:
-              return None
-          except:
-            return None
-          statement = 'SELECT VALUE entry.' + post_col_name.colname + ' FROM ' + post_name.tablename+' entry LIMIT 10000;'
-          data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
-          res = requests.post(url, params=data_dict)
-          if res.status_code == 200:
-            j_res = res.json()
-            posts = [(i,) for i in j_res['results']]
+    if task_upload_file is not None:
+      readerR = csv.reader(TextIOWrapper(task_upload_file, errors='ignore'), delimiter='|', skipinitialspace=True)
+      labelsF = next(readerR)
+      posts = readerR
+    elif db_info is not None and post_name is not None and post_col_name is not None and labels is not None:
+      if db_info.is_mysql:
+        conn = pymysql.connect(host=db_info.ip,
+                              port=db_info.port,
+                              user=db_info.username,
+                              password=db_info.password,
+                              db=db_info.dbname,
+                              cursorclass=pymysql.cursors.Cursor
+                              )
+        post_dict = {}
+        try:
+          cur = conn.cursor()
+          cur.execute("SELECT " + post_col_name.colname + " FROM " + post_name.tablename + " LIMIT 10000")
+          posts = list(cur.fetchall())
           labelsF = labels.strip().split(';')
-          statement = 'SELECT VALUE entry.id FROM ' + post_name.tablename + ' entry LIMIT 10000;'
-          data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+          print(labelsF)
+          cur.execute("SELECT id FROM " + post_name.tablename + " LIMIT 10000")
+          ids = list(cur.fetchall())
+          has_id = True
+        finally:
+          cur.close()
+          conn.close()
+      else:
+        url = 'http://' + db_info.ip + ':' + str(db_info.port) + '/query/service'
+        statement = 'use ' + db_info.dbname + ';'
+        data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+        try:
           res = requests.post(url, params=data_dict)
-          if res.status_code == 200:
-            j_res = res.json()
-            if j_res['results'] != [None] * len(j_res['results']):
-              has_id = True
-              ids = [(i,) for i in j_res['results']]
-      else:
-        return None
-      if has_id:
-        post_dict = dict(zip([i[0] for i in posts], [i[0] for i in ids]))
-      task_obj = Task.objects.create(
-                                    title=task_title,
-                                    description=task_description,
-                                    num_posts=task_num_posts,
-                                    num_labelers=task_num_labelers,
-                                    random_label=task_random_label,
-                                    connection=db_info,
-                                    table_name=post_name,
-                                    creator=user,
-                                    prerequisite=prerequisite,
-                                    upload_task=task_upload_file
-                                    )
-      self.id = task_obj.id
-      list2_shuf_temp = []
-      ctr = 0
-      for post in posts:
-        if post != []:
-          list2_shuf_temp.append(post[0])
-          ctr = ctr + 1
-      if task_random_label == 'T':
-        list1_shuf = []
-        list2_shuf = []
-        index_shuf = range(ctr)
-        index_shuf1 = [i for i in range(ctr)]
-        random.shuffle(index_shuf1)
-        for i in index_shuf1:
-            temp = list2_shuf_temp[i]
-            list2_shuf.append(temp)
-        list1_shuf = labelsF
-      else:
-          list2_shuf = list2_shuf_temp
-          list1_shuf = labelsF
-
-      for label in list1_shuf:
-        label_object = Label.objects.create(content=label)
-        task_obj.label_list.add(label_object)
-      for post in list2_shuf:
-        if has_id:
-          post_object = Post.objects.create(
-                                         content=post,
-                                         author=user,
-                                         db_id=int(post_dict.get(post)),
-                                         )
-        else:
-          post_object = Post.objects.create(
-                                         content=post,
-                                         author=user,
-                                         )
-        task_obj.post_list.add(post_object)
-        task_obj.save()
-    except:
+          if res.status_code != 200:
+            return None
+        except:
+          return None
+        statement = 'SELECT VALUE entry.' + post_col_name.colname + ' FROM ' + post_name.tablename+' entry LIMIT 10000;'
+        data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+        res = requests.post(url, params=data_dict)
+        if res.status_code == 200:
+          j_res = res.json()
+          posts = [(i,) for i in j_res['results']]
+        labelsF = labels.strip().split(';')
+        statement = 'SELECT VALUE entry.id FROM ' + post_name.tablename + ' entry LIMIT 10000;'
+        data_dict = {'statement': statement, 'pretty': 'true', 'client_context_id': 'secret'}
+        res = requests.post(url, params=data_dict)
+        if res.status_code == 200:
+          j_res = res.json()
+          if j_res['results'] != [None] * len(j_res['results']):
+            has_id = True
+            ids = [(i,) for i in j_res['results']]
+    else:
       return None
+    if has_id:
+      post_dict = dict(zip([i[0] for i in posts], [i[0] for i in ids]))
+    task_obj = Task.objects.create(
+                                  title=task_title,
+                                  description=task_description,
+                                  num_posts=task_num_posts,
+                                  num_labelers=task_num_labelers,
+                                  random_label=task_random_label,
+                                  connection=db_info,
+                                  table_name=post_name,
+                                  creator=user,
+                                  prerequisite=prerequisite,
+                                  upload_task=task_upload_file
+                                  )
+    self.id = task_obj.id
+    list2_shuf_temp = []
+    ctr = 0
+    for post in posts:
+      if post != []:
+        list2_shuf_temp.append(post[0])
+        ctr = ctr + 1
+    if task_random_label == 'T':
+      list1_shuf = []
+      list2_shuf = []
+      index_shuf = range(ctr)
+      index_shuf1 = [i for i in range(ctr)]
+      random.shuffle(index_shuf1)
+      for i in index_shuf1:
+          temp = list2_shuf_temp[i]
+          list2_shuf.append(temp)
+      list1_shuf = labelsF
+    else:
+        list2_shuf = list2_shuf_temp
+        list1_shuf = labelsF
+
+    for label in list1_shuf:
+      label_object = Label.objects.create(content=label)
+      task_obj.label_list.add(label_object)
+    for post in list2_shuf:
+      if has_id:
+        post_object = Post.objects.create(
+                                       content=post,
+                                       author=user,
+                                       db_id=int(post_dict.get(post)),
+                                       )
+      else:
+        post_object = Post.objects.create(
+                                       content=post,
+                                       author=user,
+                                       )
+      task_obj.post_list.add(post_object)
+      task_obj.save()
 
     return task_obj
 

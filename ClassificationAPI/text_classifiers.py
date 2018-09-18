@@ -3,13 +3,12 @@ import os
 import tensorflow as tf
 import time
 from abc import ABC, abstractmethod
-from gensim.models.word2vec import Word2Vec, LineSentence
 from nltk.tokenize import word_tokenize
 from pathlib import Path
 from re import sub
 from sklearn.base import ClassifierMixin
 from tensorflow.contrib.learn import preprocessing
-
+import pickle
 
 class TextClassifier(ABC, ClassifierMixin):
     def _clean_str(self, string):
@@ -67,14 +66,18 @@ class TextClassifier(ABC, ClassifierMixin):
         """
         pass
 
+def load_embedding(embedding_file):
+    with open(embedding_file, 'rb') as pfile:
+        word_embedding = pickle.load(pfile)
+    return word_embedding
 
 class CNNClassifier(TextClassifier):
-    def __init__(self, dev_sample_percentage=0.1, embedding_dim=128,
-                 filter_sizes="3,4,5", num_filters=128, dropout_keep_prob=0.5,
-                 l2_reg_lambda=0.0, batch_size=64, num_epochs=200,
+    def __init__(self, dev_sample_percentage=0.1, embedding_dim=100,
+                 filter_sizes="3,3,3", num_filters=128, dropout_keep_prob=0.5,
+                 l2_reg_lambda=0.0, batch_size=1, num_epochs=200,
                  evaluate_every=100, checkpoint_every=100, num_checkpoints=5,
                  allow_soft_placement=True, log_device_placement=False,
-                 random_state=10, unlabeled_data=None, checkpoint_dir=None):
+                 random_state=10, word_embedding='None', checkpoint_dir=None):
         self.__dev_sample_percentage = dev_sample_percentage
         self.__embedding_dim = embedding_dim
         self.__filter_sizes = filter_sizes
@@ -96,22 +99,12 @@ class CNNClassifier(TextClassifier):
         self.__graph = None
         self.__sess = None
 
-        if unlabeled_data is None:
+        if word_embedding == 'None':
             self.__w2v = None
         else:
-            self.__w2v = {}
-            path = "./models/w2v_" + unlabeled_data[unlabeled_data.rfind("/") +
-                                                    1:] + ".model"
+            self.__w2v = load_embedding('/data/share/nzhan005/' + word_embedding)
 
-            if Path(path).is_file():
-                word2vec = Word2Vec.load(path)
-            else:
-                word2vec = Word2Vec(LineSentence(unlabeled_data))
 
-                word2vec.save(path)
-
-            for word in word2vec.wv.vocab:
-                self.__w2v[word] = word2vec[word]
 
     def __batch_iter(self, data, batch_size, num_epochs, shuffle=True):
         data = np.array(data)
@@ -147,7 +140,6 @@ class CNNClassifier(TextClassifier):
         x_dev = x_shuffled[dev_sample_index:]
         y_train = y_shuffled[:dev_sample_index]
         y_dev = y_shuffled[dev_sample_index:]
-
         with tf.Graph().as_default():
             asp = self.__flags.allow_soft_placement
             ldp = self.__flags.log_device_placement
@@ -203,14 +195,11 @@ class CNNClassifier(TextClassifier):
                 dev_summary_dir = os.path.join(out_dir, "summaries", "dev")
                 dev_summary_writer = tf.summary.FileWriter(dev_summary_dir,
                                                            sess.graph)
-                path = os.path.join(out_dir, "checkpoints")
-                self.__checkpoint_dir = os.path.abspath(path)
                 checkpoint_prefix = os.path.join(self.__checkpoint_dir,
                                                  "model")
 
                 if not os.path.exists(self.__checkpoint_dir):
                     os.makedirs(self.__checkpoint_dir)
-
                 max_to_keep = self.__flags.num_checkpoints
                 saver = tf.train.Saver(tf.global_variables(),
                                        max_to_keep=max_to_keep)
@@ -220,17 +209,14 @@ class CNNClassifier(TextClassifier):
                 batches = self.__batch_iter(list(zip(x_train, y_train)),
                                             self.__flags.batch_size,
                                             self.__flags.num_epochs)
-
                 for batch in batches:
                     x_batch, y_batch = zip(*batch)
-
                     self.__train_step(x_batch, y_batch, cnn, sess,
                                       self.__flags.dropout_keep_prob, train_op,
                                       global_step, train_summary_op,
                                       train_summary_writer)
 
                     current_step = tf.train.global_step(sess, global_step)
-
                     if current_step % self.__flags.evaluate_every == 0:
                         self.__dev_step(x_dev, y_dev, cnn, sess, global_step,
                                         dev_summary_op,
@@ -239,11 +225,9 @@ class CNNClassifier(TextClassifier):
                     if current_step % self.__flags.checkpoint_every == 0:
                         saver.save(sess, checkpoint_prefix,
                                    global_step=current_step)
-
-        self.__complete_training()
         return self
 
-    def __complete_training(self):
+    def complete_training(self):
         checkpoint_file = tf.train.latest_checkpoint(self.__checkpoint_dir)
         self.__graph = tf.Graph()
 
@@ -411,7 +395,7 @@ class CNNClassifier(TextClassifier):
                     values = []
 
                     for value in word2vec.values():
-                        values.append(value)
+                        values.append(value.tolist())
 
                     embedding_size = len(values[0])
                     stack_values = np.array([embedding_size * [0]] + values,
@@ -422,7 +406,6 @@ class CNNClassifier(TextClassifier):
                 embedded_chars = tf.nn.embedding_lookup(self.W, self.input_x)
                 self.__embedded_chars_expanded = tf.expand_dims(embedded_chars,
                                                                 -1)
-
             pooled_outputs = []
 
             for i, filter_size in enumerate(filter_sizes):

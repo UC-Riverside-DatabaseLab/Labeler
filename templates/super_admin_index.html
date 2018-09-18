@@ -141,15 +141,36 @@
                                         <!--a href="{% url 'classify:create_classification_model' %}" class="btn btn-lg btn-block btn-default">Start</a-->
                                 </div>
                         </div>
-
+                              <div class="row">
+                                <div class="col-md-9 cta-contents">
+                                  <h1 class="cta-title">Edit Classifier &nbsp <a href="/admin/classify/classify/"<span class="glyphicon glyphicon-pencil"></span></a></h1>
+                                  <div class="cta-desc">
+                                    <p>Step by step interface to edit existing classifier.</p>
+                                  </div>
+                                </div>
+                                <div class="col-md-3 cta-button">
+                                  <!--a href="/admin/task/task/" class="btn btn-lg btn-block btn-default">Start</a-->
+                                </div>  
+                              </div> 
 		</div>
 
 	</div>
 	<div class="col-sm-6">
                  <div class="bs-calltoaction bs-calltoaction-info">
+                  <div class="row">
+                                <div class="col-md-9 cta-contents">
+                                        <h1 class="cta-title">View Classifier Task &nbsp <a href="{% url 'classify:classify_list' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+                                        <div class="cta-desc">
+                                                <p>View your scheduled training task here.</p>
+                                        </div>
+                                </div>
+                                <div class="col-md-3 cta-button">
+                                        <!--a href="{% url 'task:create_task' %}" class="btn btn-lg btn-block btn-default">Start</a-->
+                                </div>
+                        </div>
                          <div class="row">
                                 <div class="col-md-9 cta-contents">
-                                        <h1 class="cta-title">Classify data &nbsp <a href="{% url 'task:create_task' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
+                                        <h1 class="cta-title">Classify data &nbsp <a href="{% url 'classify:classify_data' %}"><span class="glyphicon glyphicon-pencil"></span></a></h1>
                                         <div class="cta-desc">
                                                 <p>Step by step interface to classify data.</p>
                                         </div>

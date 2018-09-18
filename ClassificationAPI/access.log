@@ -1,0 +1,138 @@
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [07/Sep/2018 16:06:52] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/Sep/2018 16:17:59] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/Sep/2018 16:19:31] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/Sep/2018 16:19:57] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/Sep/2018 16:20:04] "[37mPOST /classify HTTP/1.1[0m" 200 -
+127.0.0.1 - - [07/Sep/2018 16:20:42] "[37mPOST /classify HTTP/1.1[0m" 200 -
+ * Running on http://localhost:6666/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [10/Sep/2018 20:04:47] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 20:05:41] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+ * Running on http://localhost:6666/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [10/Sep/2018 21:40:32] "[37mPOST /classify HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 21:42:20] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 21:56:25] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 21:58:09] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 22:10:10] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 22:38:47] "[37mPOST /train HTTP/1.1[0m" 200 -
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/text_classifiers.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/text_classifiers.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/text_classifiers.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [10/Sep/2018 23:03:32] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 23:05:09] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:09:48] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:11:10] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:13:01] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:17:29] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:19:57] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:21:03] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [10/Sep/2018 23:26:39] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 23:29:04] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 23:43:31] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [10/Sep/2018 23:44:12] "[37mPOST /train HTTP/1.1[0m" 200 -
+ * Running on http://localhost:6666/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [11/Sep/2018 00:06:37] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 00:10:23] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 00:14:01] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 00:16:53] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 00:24:19] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 00:25:22] "[37mPOST /train HTTP/1.1[0m" 200 -
+ * Running on http://localhost:6666/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [11/Sep/2018 14:15:46] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:17:43] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:19:56] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:20:03] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:20:24] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:21:26] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:21:32] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:21:54] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:23:50] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:24:01] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:24:22] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:25:45] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:25:51] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:26:12] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:28:00] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:28:13] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:28:37] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:30:46] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:30:59] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:31:23] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:32:17] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:33:48] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:33:55] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:34:16] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:35:47] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:35:58] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:36:19] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [11/Sep/2018 14:37:44] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [11/Sep/2018 14:38:06] "[37mPOST /classify HTTP/1.1[0m" 200 -
+ * Running on http://localhost:6666/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [12/Sep/2018 15:53:10] "[37mPOST /classify HTTP/1.1[0m" 200 -
+ * Running on http://localhost:6666/ (Press CTRL+C to quit)
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [14/Sep/2018 13:28:14] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [14/Sep/2018 13:33:09] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [14/Sep/2018 13:33:26] "[37mPOST /classify HTTP/1.1[0m" 200 -
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/api.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [14/Sep/2018 13:50:48] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [14/Sep/2018 13:50:54] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+127.0.0.1 - - [14/Sep/2018 13:51:16] "[1m[35mPOST /train HTTP/1.1[0m" 500 -
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/api.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [14/Sep/2018 14:36:14] "[37mPOST /train HTTP/1.1[0m" 200 -
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/api.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/api.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+127.0.0.1 - - [14/Sep/2018 14:40:21] "[37mPOST /train HTTP/1.1[0m" 200 -
+127.0.0.1 - - [14/Sep/2018 14:41:27] "[37mPOST /classify HTTP/1.1[0m" 200 -
+127.0.0.1 - - [14/Sep/2018 14:42:20] "[37mPOST /train HTTP/1.1[0m" 200 -
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/text_classifiers.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/text_classifiers.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831
+ * Detected change in '/home/nan/labelingsystem/ClassificationAPI/text_classifiers.py', reloading
+ * Restarting with stat
+ * Debugger is active!
+ * Debugger PIN: 189-013-831

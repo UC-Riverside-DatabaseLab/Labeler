@@ -18,6 +18,7 @@ The goal of this project is for user to easily built and deploy his own collabor
 │   └── wsgi.py
 ├── account/
 ├── classify/
+│   ├── Model.py					 <- classify model
 ├── label/
 │   ├── Model.py					 <- label model
 ├── post/
@@ -39,7 +40,7 @@ The goal of this project is for user to easily built and deploy his own collabor
 The easiest way to run this project is to use docker as it has the binaries and all dependencies pre-installed.
 1. Install docker
 2. Inside this directory, run:`docker build . -t [IMAGE_TAG]`.
-3. 
+3. (TODO)
 
 ## Running from github
 ### 💾 Installation and requirements on Ubuntu 16.04

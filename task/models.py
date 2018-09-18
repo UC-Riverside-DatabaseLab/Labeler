@@ -176,18 +176,18 @@ class Task(models.Model):
     Connection,
     on_delete=models.CASCADE,
     verbose_name = 'connection',
-    blank = False,
+    blank = True,
     default = None,
-    null = False,
+    null = True,
     editable = False,)
 
   table_name = models.ForeignKey(
     Tablename,
     on_delete=models.CASCADE,
     verbose_name = 'table_name',
-    blank = False,
+    blank = True,
     default = None,
-    null = False,
+    null = True,
     editable = False,)
   upload_task = models.FileField(Label,upload_to='post list', default=None, editable=False)
 

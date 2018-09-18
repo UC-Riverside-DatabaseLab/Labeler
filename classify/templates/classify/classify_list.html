@@ -1,0 +1,102 @@
+{% extends "base_site.html" %}
+
+{% load static %}
+{% load check_prerequisite %}
+
+{% block extrastyle %}
+	<link rel="stylesheet" type="text/css" href="{% static 'css/index.css' %}">
+{% endblock extrastyle %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+<a href="{% url 'home' %}">Home </a>
+&rsaquo;
+</div>
+{% endblock breadcrumbs %}
+<style>
+table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+tr:nth-child(even) {
+    background-color: #dddddd;
+}
+</style>
+{% block content %}
+<meta http-equiv="refresh" content="10">
+    <h1>Task List</h1>
+
+    {% if running %}
+  <h2>Runing Task:</h2>
+  
+<table>
+  <tr>
+    <th>task_name</th>
+    <th>status</th>
+    <th>run_at</th>
+    <th>complete_at</th>
+    <th>attempts</th>
+    <th>last_error</th>
+    <th>delete</th>
+  </tr>
+      {% for task in running_array %}
+      <tr>
+        <td>{{ task.1}}</td>
+        {% if task.2 %}
+        <td style="background-color:Tomato;">running</td>
+        {% else %}
+        <td style="background-color:DodgerBlue;">scheduled</td>
+        {% endif %}
+        <td>{{ task.0.run_at}}</td>
+        <td>{{ task.0.locked_at}}</td>
+        <td>{{ task.0.attempts}}</td>
+        <td>{{ task.0.last_error}}</td>
+        <td><a href='/classify/delete_classify/{{task.0.pk}}'><i class="fa fa-trash"></i></a></td>
+        
+      </tr>
+      {% endfor %}
+</table>
+  {% endif %}
+  {% if complete %}
+  <h2>Completed Task:</h2>
+<table>
+  <tr>
+    <th>task_name</th>
+    <th>status</th>
+    <th>run_at</th>
+    <th>complete_at</th>
+    <th>attempts</th>
+    <th>last_error</th>
+    <th>delete</th>
+
+  </tr>
+      {% for task in complete_array %}
+      <tr>
+        <td>{{ task.1}}</td>
+        {% if task.0.last_error %}
+        <td style="background-color:Red;">failed</td>
+        {% else %}
+        <td style="background-color:Green;">success</td>
+        {% endif %}
+        <td>{{ task.0.run_at}}</td>
+        <td>{{ task.0.locked_at}}</td>
+        <td>{{ task.0.attempts}}</td>
+        <td>{{ task.0.last_error}}</td>
+        <td><a href='/classify/delete_classify/{{task.0.pk}}'><i class="fa fa-trash"></i></a></td>
+      </tr>
+      {% endfor %}
+</table>
+{% endif %}
+{% if not complete and not running%}
+<p> no task avaliable.</p>
+{% endif %}
+<br></br>  
+{% endblock %}

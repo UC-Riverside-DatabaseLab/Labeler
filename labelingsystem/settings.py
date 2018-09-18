@@ -12,6 +12,9 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+MAX_ATTEMPTS = 3
+MAX_RUN_TIME = 3600
+BACKGROUND_TASK_RUN_ASYNC = False
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TEMPLATE_DIR = os.path.join(BASE_DIR, 'templates')
@@ -61,6 +64,7 @@ INSTALLED_APPS = [
     'classify',
     'smart_selects',
     'django_select2',
+    'background_task'
 ]
 
 MIDDLEWARE = [
@@ -107,8 +111,26 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
-
+'''
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': '/home/nan/labelingsystem/log',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+'''
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
 
