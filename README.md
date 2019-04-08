@@ -223,7 +223,17 @@ Allow from all
 6. `cd` into the folder that contains the `media` folder.
 7. Edit permission of the root folder: `sudo chgrp -R www-data media && sudo chmod -R g+w media`.
 
-##### > RUN
+##### > Start Classification API
+1. `cd` into `labelingsystem`: `cd /.../labelingsystem`.
+2. `python3 ./ClassificationAPI/api.py &`
+
+##### > Start Backgrond Task Scheduler
+1. `cd` into `labelingsystem`: `cd /.../labelingsystem`.
+2. `python3 manage.py process_tasks &`
+
+(Above two should be integrated into Apache server later in production)
+
+##### > Run
 Open any browser in your OS and reach `www.yourdomain.com`, you shall see the login page of the crowdtagger.
 
 ## Run the crowdtagger
