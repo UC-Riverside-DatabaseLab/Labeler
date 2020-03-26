@@ -6,10 +6,16 @@ from text_classifiers import CNNClassifier, SKLearnTextClassifier
 from utils import evaluate
 import pickle
 import os
+import getpass
+import stat
 import tensorflow as tf
 import numpy as np
 import logging
 import time
+import pwd
+#uid = pwd.getpwnam('apache')[2]
+#os.setuid(uid)
+os.environ["FLASK_APP"]= "/var/www/labelingsystem/ClassificationAPI/api.py"
 app = Flask(__name__)
 app.debug = True
 classifier = None
@@ -225,6 +231,10 @@ def train():
         return jsonify(error=errors)
 
     classifier.fit(json[data_key], json[labels_key], weight)
+    print(json[path_key])
+    print(os.path.isdir(json[path_key]))
+    print(os.stat(json[path_key]))
+    print(getpass.getuser())
     with open(os.path.join(json[path_key], 'classify.pkl'), 'wb') as f:
         pickle.dump(classifier, f, protocol=pickle.HIGHEST_PROTOCOL)
     return jsonify(error=errors) if len(errors) > 0 else jsonify(result=True)
