@@ -20,7 +20,7 @@
 	 {% if messages %}
 	    <ul class="messages">
 		{% for message in messages %}
-		<li font-weight:bold;>{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+		<li font-weight:bold;{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
 		{% endfor %}
 		<!--a href="{% url 'account:password_reset' %}" >Change Password</a-->
 		{% endif %}
