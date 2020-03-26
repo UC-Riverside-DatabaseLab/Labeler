@@ -24,7 +24,8 @@ from .tasks import query_api
 
 CHOICES = (('T', 'True',), ('F', 'False',))
 VEC_CHOICES = (("count", "count"), ("tfidf", "tfidf"),)
-CLA_CHOICES = (("cnn", "cnn"), ("rf", "rf"), ("svm", "svm"))
+#CLA_CHOICES = (("cnn", "cnn"), ("rf", "rf"), ("svm", "svm"))
+CLA_CHOICES = (("rf", "rf"), ("svm", "svm"))
 CRE_CHOICES = (('gini', 'gini'), ('entropy', 'entropy'))
 DEC_CHOICES = (('ovo', 'ovo'), ('ovr', 'ovr'))
 KER_CHOICES = (('rbf', 'rbf'), ('linear', 'linear'), ('poly', 'poly'), ('sigmoid', 'sigmoid'), ('precomputed', 'precomputed'))
@@ -36,7 +37,7 @@ class CreateClassificationModelForm(forms.Form):
 
   def __init__(self, *args, **kwargs):
     super(CreateClassificationModelForm, self).__init__(*args, **kwargs)
-    self.train_url = "http://localhost:6666/train"
+    self.train_url = "http://127.0.0.1:5000/train"
     self.headers = {'content-type': 'application/json'}
     self.fields['Classifier Name'] = forms.CharField(max_length=50)
     self.fields['Classifier Description'] = forms.CharField(widget=forms.Textarea, required=False)
@@ -219,6 +220,16 @@ class CreateClassificationModelForm(forms.Form):
 """),
 
       Field('Upload Task Posts and Labels', placeholder = ""),
+      HTML("""<style> p.solid {border : 1px; display: inline-block ; border-style: solid;} </style>
+          <tr>
+          <td>
+          <p class="solid">
+          <b>Note</b> : Upload a csv file with <a href="/media/train.csv" download="train.csv">this sample format</a> <br/>[Posts on the first column. Labels on the last column.]
+          </td>
+          </tr>
+          </p>
+          <!--/table-->
+          """),
       HTML("""</div><div>"""),
       HTML("""<label><input type="radio" name="post-format" id="post-format-gallery1">Labeling Task</label>
                         </div><div id="gallery-box1"> <!--style="border: 1px solid red;"--><!--select class="some_class" id="test"-->
@@ -302,7 +313,7 @@ class ClassifyDataForm(forms.Form):
 
   def __init__(self, *args, **kwargs):
     super(ClassifyDataForm, self).__init__(*args, **kwargs)
-    self.classify_url = "http://localhost:6666/classify"
+    self.classify_url = "http://127.0.0.1:5000/classify"
     self.headers = {'content-type': 'application/json'}
     self.fields['Classifier'] = forms.ModelChoiceField(queryset=Classify.objects.all(), required=True)
     self.fields['Upload Posts'] = forms.FileField(required=True)
@@ -326,6 +337,16 @@ class ClassifyDataForm(forms.Form):
                                         <div class="panel-body"> """),
     
       Field('Upload Posts', placeholder = ""),
+      HTML("""<style> p.solid {border : 1px; display: inline-block ; border-style: solid;} </style>
+          <tr>
+          <td>
+          <p class="solid">
+          <b>Note</b> : Upload a csv file with <a href="/media/test.csv" download="test.csv">this sample format</a>[Posts on the first column.] for prediction or <a href="/media/train.csv" download="train.csv">this sample format</a> for evaluation.
+          </td>
+          </tr>
+          </p>
+          <!--/table-->
+          """),
       HTML("""</div></div>"""),
     )
     self.helper.add_input(Submit('classify_data_submit', 'Submit', css_class='btn btn-info btn-sm pull-right'))
