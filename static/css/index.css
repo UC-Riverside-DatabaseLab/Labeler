@@ -84,12 +84,12 @@
 
 .bs-calltoaction.bs-calltoaction-incomplete{
     color: #fff;
-    background-color: #c00;
+    background-color: #f88;
     border-color: #46b8da;
 }
 
 .bs-calltoaction.bs-calltoaction-complete{
-    color: #fff;
+    color: #96e554;
     background-color: #5b0;
     border-color: #46b8da;
 }
