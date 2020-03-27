@@ -135,7 +135,8 @@ class Task(models.Model):
 
   num_posts = models.PositiveIntegerField(validators=[MinValueValidator(1)],
     verbose_name = 'number of posts',
-    blank = True)
+    blank = True,
+    editable = False)
 
   num_labelers = models.CharField(
     max_length = 5,

@@ -581,7 +581,7 @@ class UpdateLabelerView(LoginRequiredMixin, FormView):
             all_labelers.append(request.POST.get('labeler_{index}'.format(index=index)))
           tcoders = '\r\n'.join(all_labelers)
           task_id = form.cleaned_data['ID']
-          delete_response = form.cleaned_data['Detele responses when removing labelers']    
+          delete_response = form.cleaned_data['Delete responses when removing labelers']    
           pform = form.update_labeler(ttask, tcoders, task_id, delete_response)
           return super(UpdateLabelerView, self).form_valid(pform)
 
@@ -608,6 +608,7 @@ class TaskEvaluationListView(LoginRequiredMixin, ListView):
       if l[0]:
         row.append(int(val) / int(l[0]))
         row.append(list(set([part.encode("utf8") for part in PostResponse.objects.filter(task=task_name.pk).values_list('responder__email', flat=True)])))
+        row.append(list(Participation.objects.filter(task=task_name.pk).values_list('labeler', flat=True))) 
         for l in list(set([part.encode("utf8") for part in PostResponse.objects.filter(task=task_name.pk).values_list('responder__email', flat=True)])):
           t.append(l)
       else:
@@ -655,7 +656,7 @@ class TaskEvaluationDetailView(LoginRequiredMixin, DetailView):
     self.head = []
     self.coder_emails = PostResponse.objects.filter(task=self.task.pk).values_list('responder__email', flat=True).distinct().order_by('responder__email')
     post_list = self.task.post_list.all()
-    media_root = settings.MEDIA_ROOT
+    media_root = settings.MEDIA_ROOT + "/"
     kappa_path = media_root + 'kappa_' + str(self.task.title) + "_" + str(self.task.pk) + '.csv'
     eval_path = media_root + 'eval_' + str(self.task.title) + "_" + str(self.task.pk) + '.csv'
     if os.path.exists(kappa_path):

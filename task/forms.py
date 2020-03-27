@@ -451,6 +451,7 @@ class CreateTaskForm(forms.Form):
           fileInput.addEventListener('input', function(e) {
               var file = fileInput.files[0];
               var textType = /text.*/;
+	      console.log(file.type);
               if (file.type.match('text.*|image.*|application.*')) {
                   var reader = new FileReader();
                   reader.onload = function(e) {
@@ -761,7 +762,7 @@ class CreateTaskForm(forms.Form):
         user.set_password(passwrd)
         user.save()
         subject = str.format("Task created for {0}", coderP)
-        message = str.format("Hi {0},\n\n\tYou have been selected to complete a task. Please start here: http://dblab-rack30.cs.ucr.eduaccount/login\n Your password :{1} \nBest,\nSocial Post Analyzer System", coderP, passwrd)
+        message = str.format("Hi {0},\n\n\tYou have been selected to complete a task. Please start here: http://dblab-rack30.cs.ucr.edu/account/login\n Your password :{1} \nBest,\nSocial Post Analyzer System", coderP, passwrd)
         coder_l.append(coderP)
         send_mail(subject, message, settings.EMAIL_FROM, coder_l, fail_silently=False)
       else:
@@ -789,8 +790,8 @@ class EditTaskForm(forms.Form):
     self.fields['Label Posts in Random Order'] =  forms.CharField(max_length=5, widget=forms.Select(choices=CHOICES))
     self.fields['Upload Quiz Posts and Labels'] = forms.FileField(required=False)
     self.fields['Participating Labelers'] = forms.CharField(widget=forms.Textarea, required=False)
-    title = Task.objects.filter(title=self.Task.title)
-    print (title)
+    #title = Task.objects.filter(title=self.Task.title)
+    #print (title)
     self.helper = FormHelper()
     self.helper.form_id = 'edit_task_form'
     self.helper.form_method = 'POST'
@@ -923,8 +924,8 @@ class UpdateLabelerForm(forms.Form):
         self.fields['labeler_{index}'.format(index=index)].widget.attrs.update({'id': 'labeler_{index}'.format(index=index)})
     self.fields['Select Task'] = forms.CharField(required=False)
     self.fields['Select Task'].widget.attrs['readonly'] = True
-    self.fields['Detele responses when removing labelers'] = forms.BooleanField(initial = False, help_text='Caution: When chosen, if a user is removed, it will delete all his responses', required=False)
-    self.fields['Detele responses when removing labelers'].widget.attrs.update({'id': 'delete_response'})
+    self.fields['Delete responses when removing labelers'] = forms.BooleanField(initial = False, help_text='Caution: When chosen, if a user is removed, it will delete all his responses', required=False)
+    self.fields['Delete responses when removing labelers'].widget.attrs.update({'id': 'delete_response'})
     self.fields['ID'] = forms.CharField(required=False)
     self.fields['ID'].widget = forms.HiddenInput()
     self.fields['Participating Labelers'] = forms.CharField(widget=forms.Textarea, required=False)
@@ -942,7 +943,7 @@ class UpdateLabelerForm(forms.Form):
           </div>"""),
       HTML("""<div class="panel-body"><p><b>Note</b>: Select a task and add/delete a labeler.</p>"""),
       Field('Select Task', placeholder=""),
-      Field('Detele responses when removing labelers', placeholder=""),
+      Field('Delete responses when removing labelers', placeholder=""),
       Field('ID', placeholder=""),
       Field('Participating Labelers', placeholder="coder1@example.com \n coder2@example.com \n ..."),
       Field('extra_field_count'),
