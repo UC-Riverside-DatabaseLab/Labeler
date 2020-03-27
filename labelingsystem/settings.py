@@ -104,7 +104,7 @@ WSGI_APPLICATION = 'labelingsystem.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
+        'NAME': 'postgres_latest',
         'USER': 'postgres',
         'PASSWORD': 'postgres',
         'HOST': 'localhost',
